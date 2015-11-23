@@ -9,9 +9,40 @@ namespace Tests._01
 {
     class Program
     {
+        static object state;
         static void Main(string[] args)
         {
+            state = 5;
+            var t1 = new Thread(M1);
+            var t2 = new Thread(M2);
+            t1.Start(state);
 
+            t2.Start(state);
+
+        }
+
+        static void M1(object obj)
+        {
+            lock(obj)
+            {
+                for (var i = 0; i < 10; i++)
+                {
+                    Console.WriteLine("111");
+                    Thread.Sleep(300);
+                }
+            }
+        }
+
+        static void M2(object obj)
+        {
+            lock (obj)
+            {
+                for (var i = 0; i < 10; i++)
+                {
+                    Console.WriteLine("222");
+                    Thread.Sleep(300);
+                }
+            }
         }
 
         #region Q3

@@ -16,8 +16,7 @@ namespace _03.Synchronization
         static Barrier b;
         static void Main(string[] args)
         {
-            m = new Mutex();
-            Console.WriteLine("123123");
+            ARESample();
         }
 
         private static void MRESample()
@@ -39,35 +38,35 @@ namespace _03.Synchronization
         {
             //AutoResetEvent.WaitAny(new WaitHandle[] { are, are1 });
             //mre.WaitOne();
-            //are.WaitOne();
-            m.WaitOne();
+            are.WaitOne();
+            //m.WaitOne();
             for (var i = 0; i < 10; i++)
             {
                 Console.WriteLine("111");
                 Thread.Sleep(1000);
             }
             //b.SignalAndWait();
-            //are.Set();
-            m.ReleaseMutex();
+            are.Set();
+            //m.ReleaseMutex();
         }
         static void Action2()
         {
             //mre.WaitOne();
-            //are.WaitOne();
-            m.WaitOne();
+            are.WaitOne();
+            //m.WaitOne();
             for (var i = 0; i < 10; i++)
             {
                 Console.WriteLine("222");
                 Thread.Sleep(1000);
             }
             //b.SignalAndWait();
-            //are.Set();
-            m.ReleaseMutex();
+            are.Set();
+            //m.ReleaseMutex();
         }
         static void Action3()
         {
             //mre.WaitOne();
-            //are.WaitOne();
+            are.WaitOne();
             //m.WaitOne();
             for (var i = 0; i < 10; i++)
             {
@@ -75,13 +74,13 @@ namespace _03.Synchronization
                 Thread.Sleep(1000);
             }
             //b.SignalAndWait();
-            //are.Set();
+            are.Set();
             //m.ReleaseMutex();
         }
         static void Action4()
         {
             //mre.WaitOne();
-            //are.WaitOne();
+            are.WaitOne();
             //m.WaitOne();
             for (var i = 0; i < 10; i++)
             {
@@ -89,7 +88,7 @@ namespace _03.Synchronization
                 Thread.Sleep(1000);
             }
             //b.SignalAndWait();
-            //are.Set();
+            are.Set();
             //m.ReleaseMutex();
         }
 
@@ -151,12 +150,13 @@ namespace _03.Synchronization
         private static void ARESample()
         {
             are = new AutoResetEvent(true);
+            are.Reset();
             Task.Factory.StartNew(Action1);
             Task.Factory.StartNew(Action2);
             Task.Factory.StartNew(Action3);
             Task.Factory.StartNew(Action4);
             Thread.Sleep(2500);
-            are.Reset();
+            are.Set();
             Console.ReadKey();
         }
     }
