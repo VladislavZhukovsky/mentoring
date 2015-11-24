@@ -11,27 +11,43 @@ namespace _01.AsyncAwait
     {
         static void Main(string[] args)
         {
-            var range = Enumerable.Range(1, 10000000);
-            var query = range.AsParallel().Where(x => x % 2 == 1);
-            var array = query.ToArray();
 
-            var t = Do();
-            Console.WriteLine(10000000);
+
+            var t = DoAsync();
+            for (var i = 0; i < 30; i++)
+            {
+                Console.WriteLine("MAIN" + Thread.CurrentContext.ContextID);
+                Thread.Sleep(1000);
+            }
             Console.ReadKey();
         }
 
-        static async Task<int> Do()
+        static async Task<int> DoAsync()
         {
-            await Task.Run(() => 
+            var t = Task.Run(() =>
             {
                 for (var i = 0; i < 10; i++)
                 {
-                    Console.WriteLine(i);
+                    Console.WriteLine("ASYNC" + Thread.CurrentContext.ContextID.ToString());
                     Thread.Sleep(1000);
                 }
             });
+
+            await t;
+            for (var i = 0; i < 10; i++)
+            {
+                Console.WriteLine("NOT ASYNC" + Thread.CurrentContext.ContextID.ToString());
+                Thread.Sleep(1000);
+            }
             return 1000000;
         }
+
+        static async Task DoVoidAsync()
+        {
+            await Task.Delay(3000);
+            Console.WriteLine("task ended");
+        }
+
 
     }
 }
