@@ -24,17 +24,17 @@ namespace _01.AsyncAwait
 
         static async Task<int> DoAsync()
         {
-            //var t = Task.Run(() =>
-            //{
-            //    for (var i = 0; i < 10; i++)
-            //    {
-            //        Console.WriteLine("222 ASYNC" + Thread.CurrentThread.ManagedThreadId);
-            //        Thread.Sleep(1000);
-            //    }
-            //});
+            var t = Task.Run(() =>
+            {
+                for (var i = 0; i < 10; i++)
+                {
+                    Console.WriteLine("222 ASYNC" + Thread.CurrentThread.ManagedThreadId);
+                    Thread.Sleep(1000);
+                }
+            });
             //await t;
             Console.WriteLine("777 MAIN" + Thread.CurrentThread.ManagedThreadId);
-            await DoAsyncInner();
+            //DoAsyncInner();
             for (var i = 0; i < 30; i++)
             {
                 Console.WriteLine("333 ASYNC REMAINDER" + Thread.CurrentThread.ManagedThreadId);
