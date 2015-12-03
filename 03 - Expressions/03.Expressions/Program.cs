@@ -13,14 +13,9 @@ namespace _03.Expressions
     {
         static void Main(string[] args)
         {
-            Func<int, int> func = x => x + 3;
-            Expression<Func<int, int>> expr = x => x + 3;
-            Debug.WriteLine(func);
-            var visitor = new TraceExpressionVisitor();
-            visitor.Visit(expr);
 
-            Expression<Func<object>> expr1 = () => new { Name = "Vlad" };
-            var expr2 = Expression.New()
+
+
 
             Console.ReadKey();
         }
