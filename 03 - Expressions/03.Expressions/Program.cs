@@ -20,7 +20,6 @@ namespace _03.Expressions
             visitor.Visit(expr);
 
             Expression<Func<object>> expr1 = () => new { Name = "Vlad" };
-            var expr2 = Expression.New()
 
             Console.ReadKey();
         }
