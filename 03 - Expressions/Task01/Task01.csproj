@@ -44,6 +44,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Bar.cs" />
+    <Compile Include="Foo.cs" />
+    <Compile Include="Mapper.cs" />
+    <Compile Include="MappingGenerator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
