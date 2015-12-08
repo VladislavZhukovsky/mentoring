@@ -16,7 +16,7 @@ namespace _02.IQueryables
 
         public IQueryable<TElement> CreateQuery<TElement>(Expression expression)
         {
-            return new Query<TElement>(expression, this);
+            throw new NotImplementedException();
         }
 
         public object Execute(Expression expression)

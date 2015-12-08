@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,18 +12,27 @@ namespace Task01
     {
         public Mapper<TSource, TDestination> Generate<TSource, TDestination>()
         {
-            var sourceParam = Expression.Parameter(typeof(TSource));
+            var parameterExp = Expression.Parameter(typeof(TSource));
 
-            var mapFunction =
-                Expression.Lambda<Func<TSource, TDestination>>(
-                    //Expression.New(typeof(TDestination).GetConstructor(new Type[] { typeof(Int32) }), Expression.Parameter(typeof(Int32))),
-                    Expression.New(typeof(TDestination)
-                    
-                    ),
+            var bindingExps = new List<MemberBinding>();
 
-                    sourceParam
-             );
-            return new Mapper<TSource, TDestination>(mapFunction.Compile());
+            List<MemberInfo> memberInfos = new List<MemberInfo>();
+
+            typeof(Bar).GetFields().ToList().ForEach(fieldInfo => memberInfos.Add(fieldInfo));
+            typeof(Bar).GetProperties().ToList().ForEach(propertyInfo => memberInfos.Add(propertyInfo));
+
+            foreach (var memberInfo in memberInfos)
+            {
+                var fieldExp = Expression.PropertyOrField(parameterExp, memberInfo.Name);
+                var bindingExp = Expression.Bind(memberInfo, fieldExp);
+                bindingExps.Add(bindingExp);
+            }
+
+            var newExp = Expression.New(typeof(TDestination));
+            var memberInitExp = Expression.MemberInit(newExp, bindingExps);
+            var lambdaExp = Expression.Lambda<Func<TSource, TDestination>>(memberInitExp, parameterExp);
+
+            return new Mapper<TSource, TDestination>(lambdaExp.Compile());
         }
 
     }
