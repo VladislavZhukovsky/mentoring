@@ -42,7 +42,10 @@ namespace Sample03
         {
             var employees = new E3SEntitySet<EmployeeEntity>(ConfigurationManager.AppSettings["user"], ConfigurationManager.AppSettings["password"]);
 
-            foreach (var emp in employees.Where(e => "EPBYMINW4226" == e.workstation))
+            foreach (var emp in employees.Where(e => e.workstation.StartsWith("EPBYMINW")))
+            //foreach (var emp in employees.Where(e => e.workstation.EndsWith("226")))
+            //foreach (var emp in employees.Where(e => e.workstation.Contains("MINW4")))
+            //foreach (var emp in employees.Where(e => e.workstation == "EPBYMINW4226"))
             {
                 Console.WriteLine("{0} {1}", emp.nativename, emp.startworkdate);
             }
