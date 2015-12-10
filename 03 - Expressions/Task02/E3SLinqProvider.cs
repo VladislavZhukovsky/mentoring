@@ -39,7 +39,9 @@ namespace Sample03
             var translator = new ExpressionToFTSRequestTranslator();
             var queryString = translator.Translate(expression);
 
-            return (TResult)(e3sClient.SearchFTS(itemType, queryString));
+            var queryStrings = queryString.Split('|');
+
+            return (TResult)(e3sClient.SearchFTS(itemType, queryStrings));
         }
     }
 }

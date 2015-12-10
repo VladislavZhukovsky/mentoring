@@ -23,21 +23,23 @@ namespace Sample03.E3SClient
 
 		public Uri GenerateRequestUrl<T>(string query = "*", int start = 0, int limit = 10)
 		{
-			return GenerateRequestUrl(typeof(T), query, start, limit);
+			return GenerateRequestUrl(typeof(T), new string[] { query }, start, limit);
 		}
 
-		public Uri GenerateRequestUrl(Type type, string query = "*", int start = 0, int limit = 10)
+		public Uri GenerateRequestUrl(Type type, string[] query /*string query = "*"*/, int start = 0, int limit = 10)
 		{
 			string metaTypeName = GetMetaTypeName(type);
 
-			var ftsQueryRequest = new FTSQueryRequest
-			{
-				Statements = new List<Statement>
-				{
-					new Statement {
-						Query = query
-					}
-				},
+            var ftsQueryRequest = new FTSQueryRequest
+            {
+                //Statements = new List<Statement>
+                //{
+                //	new Statement {
+                //		Query = query
+                //	},
+                //                new Statement { Query = "workstation:(*7)" }
+                //},
+                Statements = query.Select(q => new Statement() { Query = q }).ToList(),
 				Start = start,
 				Limit = limit
 			};

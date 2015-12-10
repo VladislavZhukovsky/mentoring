@@ -75,17 +75,16 @@ namespace Sample03
                     }
                     else
                     {
-                        //if (!(node.Left.NodeType == ExpressionType.MemberAccess))
-                        //    throw new NotSupportedException(string.Format("Left operand should be property or field", node.NodeType));
-
-                        //if (!(node.Right.NodeType == ExpressionType.Constant))
-                        //    throw new NotSupportedException(string.Format("Right operand should be constant", node.NodeType));
-
                         Visit(node.Left);
                         resultString.Append("(");
                         Visit(node.Right);
                     }
                     resultString.Append(")");
+                    break;
+                case ExpressionType.AndAlso:
+                    Visit(node.Left);
+                    resultString.Append("|");
+                    Visit(node.Right);
                     break;
                 default:
                     throw new NotSupportedException(string.Format("Operation {0} is not supported", node.NodeType));
