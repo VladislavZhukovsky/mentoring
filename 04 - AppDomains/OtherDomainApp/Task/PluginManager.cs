@@ -20,10 +20,15 @@ namespace Task
             var domain = AppDomain.CreateDomain(NewDomainName(), new System.Security.Policy.Evidence(), domainSetup);
             domain.Load(assemblyName);
             var entry = domain.CreateInstanceAndUnwrap(assemblyName, assemblyName + "." + entryPointName);
-            return entry;
+            return new PluginLoadResult(domain, entry);
         }
 
-        public string NewDomainName()
+        public void UnloadPlugin(AppDomain domain)
+        {
+            AppDomain.Unload(domain);
+        }
+
+        private string NewDomainName()
         {
             var result = "AppDomain_";
             result += Guid.NewGuid().GetHashCode().ToString();
