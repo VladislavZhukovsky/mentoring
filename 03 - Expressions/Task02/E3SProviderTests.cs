@@ -26,25 +26,26 @@ namespace Sample03
             }
         }
 
-        public static void WithoutProviderNonGeneric()
-        {
-            var client = new E3SQueryClient(ConfigurationManager.AppSettings["user"], ConfigurationManager.AppSettings["password"]);
-            var res = client.SearchFTS(typeof(EmployeeEntity), "workstation:(EPBYMINW4226)", 0, 10);
+        //public static void WithoutProviderNonGeneric()
+        //{
+        //    var client = new E3SQueryClient(ConfigurationManager.AppSettings["user"], ConfigurationManager.AppSettings["password"]);
+        //    var res = client.SearchFTS(typeof(EmployeeEntity), "workstation:(EPBYMINW4226)", 0, 10);
 
-            foreach (var emp in res.OfType<EmployeeEntity>())
-            {
-                Console.WriteLine("{0} {1}", emp.nativename, emp.startworkdate);
-            }
-        }
+        //    foreach (var emp in res.OfType<EmployeeEntity>())
+        //    {
+        //        Console.WriteLine("{0} {1}", emp.nativename, emp.startworkdate);
+        //    }
+        //}
 
 
         public static void WithProvider()
         {
             var employees = new E3SEntitySet<EmployeeEntity>(ConfigurationManager.AppSettings["user"], ConfigurationManager.AppSettings["password"]);
 
-            foreach (var emp in employees.Where(e => "EPBYMINW4226" == e.workstation))
+            foreach (var emp in employees.Where(e => e.workstation.StartsWith("EPBYMINW42")))// && e.workstation.EndsWith("7")))
+            //foreach (var emp in employees.Where(e => e.workstation.StartsWith("EPBYMINW") && e.workstation.EndsWith("26")))
             {
-                Console.WriteLine("{0} {1}", emp.nativename, emp.startworkdate);
+                Console.WriteLine("{0} {1} {2}", emp.workstation, emp.nativename, emp.startworkdate);
             }
         }
     }
