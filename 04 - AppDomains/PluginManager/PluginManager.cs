@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Task
+namespace PluginManager
 {
     public class PluginManager
     {
-        public object LoadPlugin(string path, string entryPointName)
+        public PluginLoadResult LoadPlugin(string path, string entryPointName)
         {
-            var assemblyName = System.IO.Path.GetFileName(path);
+            var assemblyName = System.IO.Path.GetFileNameWithoutExtension(path);
 
             var domainSetup = new AppDomainSetup()
             {
@@ -25,13 +25,24 @@ namespace Task
 
         public void UnloadPlugin(AppDomain domain)
         {
-            AppDomain.Unload(domain);
+            try
+            {
+                AppDomain.Unload(domain);
+            }
+            catch(CannotUnloadAppDomainException ex)
+            {
+                throw ex;
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
         }
 
         private string NewDomainName()
         {
             var result = "AppDomain_";
-            result += Guid.NewGuid().GetHashCode().ToString();
+            result += new Random(Guid.NewGuid().GetHashCode()).Next(1000);
             return result;
         }
     }
