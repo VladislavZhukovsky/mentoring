@@ -8,7 +8,7 @@ namespace Task
         static void Main(string[] args)
         {
             var plugin1Path = @"D:\Vlad\Mentoring\project\04 - AppDomains\PluginV1\bin\Debug\PluginV1.dll";
-            var plugin2Path = @"D:\Vlad\Mentoring\project\04 - AppDomains\PluginV2\bin\Debug\PluginV2.dll";
+            //var plugin2Path = @"D:\Vlad\Mentoring\project\04 - AppDomains\PluginV2\bin\Debug\PluginV2.dll";
             var entryClassName = "Entry";
 
             var manager = new PluginManager.PluginManager();
