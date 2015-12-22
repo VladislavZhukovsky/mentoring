@@ -9,16 +9,16 @@ namespace Unmanaged
 {
     class Program
     {
-        [DllImport("user32.dll", ThrowOnUnmappableChar = true)]
+        [DllImport("user32.dll")]
         private static extern int MessageBox(
             [In] IntPtr hWnd,
-            [MarshalAs(UnmanagedType.LPStr)] string text,
-            [MarshalAs(UnmanagedType.LPStr)] string caption,
+            string text,
+            string caption,
             int options);
 
         static void Main(string[] args)
         {
-            MessageBox(IntPtr.Zero, "Simple message box", "Window1", 0);
+            MessageBox(IntPtr.Zero, "абвгд", "Window1", 0);
             var int32s = new Int32Struct();
             int32s.Int = 5;
         }
