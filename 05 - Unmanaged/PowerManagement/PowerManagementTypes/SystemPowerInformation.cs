@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PowerManagement.Internal;
+using System.Runtime.InteropServices;
 
 namespace PowerManagement.PowerManagementTypes
 {
+    [StructLayout(LayoutKind.Sequential)]
     public struct SystemPowerInformation
     {
         public UInt32 MaxIdlenessAllowed;

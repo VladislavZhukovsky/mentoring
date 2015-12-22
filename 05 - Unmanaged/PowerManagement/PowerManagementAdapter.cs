@@ -10,65 +10,69 @@ namespace PowerManagement
     {
         public ulong GetLastSleepTime()
         {
-            ulong lst;
+            IntPtr retVal = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(UInt64)));
             PerformOperation(
                 PowerManagementFunctions.CallNtPowerInformation(
                     PowerInformationLevel.LastSleepTime,
                     IntPtr.Zero,
                     0,
-                    out lst,
+                    retVal,
                     Marshal.SizeOf(typeof(ulong))
                 ),
                 false
             );
+            ulong lst = (ulong)Marshal.PtrToStructure(retVal, typeof(UInt64));
             return lst;
         }
 
         public ulong GetLastWakeTime()
         {
-            ulong lst;
+            IntPtr retVal = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(UInt64)));
             PerformOperation(
                 PowerManagementFunctions.CallNtPowerInformation(
                     PowerInformationLevel.LastWakeTime,
                     IntPtr.Zero,
                     0,
-                    out lst,
+                    retVal,
                     Marshal.SizeOf(typeof(ulong))
                 ),
                 false
             );
-            return lst;
+            ulong lwt = (ulong)Marshal.PtrToStructure(retVal, typeof(UInt64));
+            return lwt;
         }
 
         public SystemBatteryState GetSystemBatteryState()
         {
-            SystemBatteryState sbs;
+            IntPtr retVal = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(SystemBatteryState)));
             PerformOperation(
                 PowerManagementFunctions.CallNtPowerInformation(
                     PowerInformationLevel.SystemBatteryState,
                     IntPtr.Zero,
                     0,
-                    out sbs,
+                    retVal,
                     Marshal.SizeOf(typeof(SystemBatteryState))
                 ),
                 false
             );
+            SystemBatteryState sbs = (SystemBatteryState)Marshal.PtrToStructure(retVal, typeof(SystemBatteryState));
             return sbs;
         }
 
         public SystemPowerInformation GetSystemPowerInformation()
         {
-            SystemPowerInformation spi;
+            IntPtr retVal = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(SystemPowerInformation)));
             PerformOperation(
                 PowerManagementFunctions.CallNtPowerInformation(
                     PowerInformationLevel.SystemPowerInformation,
                     IntPtr.Zero,
                     0,
-                    out spi,
+                    retVal,
                     Marshal.SizeOf(typeof(SystemPowerInformation))
                 ),
                 false
             );
+            SystemPowerInformation spi = (SystemPowerInformation)Marshal.PtrToStructure(retVal, typeof(SystemPowerInformation));
             return spi;
         }
 
@@ -77,13 +81,13 @@ namespace PowerManagement
             byte lpInBuffer = 1;
             IntPtr lpInBufferPtr = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(byte)));
             Marshal.StructureToPtr(lpInBuffer, lpInBufferPtr, false);
-            IntPtr lpOutBufferPtr;
+            IntPtr lpOutBufferPtr = IntPtr.Zero;
             PerformOperation(
                 PowerManagementFunctions.CallNtPowerInformation(
                     10,
                     lpInBufferPtr,
                     Marshal.SizeOf(typeof(byte)),
-                    out lpOutBufferPtr,
+                    lpOutBufferPtr,
                     0
                 ),
                 false
@@ -95,13 +99,13 @@ namespace PowerManagement
             byte lpInBuffer = 0;
             IntPtr lpInBufferPtr = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(byte)));
             Marshal.StructureToPtr(lpInBuffer, lpInBufferPtr, false);
-            IntPtr lpOutBufferPtr;
+            IntPtr lpOutBufferPtr = IntPtr.Zero;
             PerformOperation(
                 PowerManagementFunctions.CallNtPowerInformation(
                     10,
                     lpInBufferPtr,
                     Marshal.SizeOf(typeof(byte)),
-                    out lpOutBufferPtr,
+                    lpOutBufferPtr,
                     0
                 ),
                 false

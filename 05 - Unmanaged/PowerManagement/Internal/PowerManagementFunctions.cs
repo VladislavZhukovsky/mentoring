@@ -6,41 +6,24 @@ namespace PowerManagement.Internal
 {
     internal static class PowerManagementFunctions
     {
-        [DllImport("powrprof.dll")]
-        internal static extern uint CallNtPowerInformation(
-            [In]  UInt32 informationLevel,
-            [In]  IntPtr lpInputBuffer,
-            [In]  Int32 nInputBufferSize,
-            [Out] out ulong lpOutputBuffer,
-            [In]  Int32 nOutputBufferSize
-        );
 
         [DllImport("powrprof.dll")]
         internal static extern uint CallNtPowerInformation(
             [In]  UInt32 informationLevel,
             [In]  IntPtr lpInputBuffer,
             [In]  Int32 nInputBufferSize,
-            [Out] out SystemBatteryState lpOutputBuffer,
+            [Out] IntPtr lpOutputBuffer,
             [In]  Int32 nOutputBufferSize
         );
 
-        [DllImport("powrprof.dll")]
-        internal static extern uint CallNtPowerInformation(
-            [In]  UInt32 informationLevel,
-            [In]  IntPtr lpInputBuffer,
-            [In]  Int32 nInputBufferSize,
-            [Out] out SystemPowerInformation lpOutputBuffer,
-            [In]  Int32 nOutputBufferSize
-        );
-
-        [DllImport("powrprof.dll")]
-        internal static extern uint CallNtPowerInformation(
-            [In]  UInt32 informationLevel,
-            [In]  IntPtr lpInputBuffer,
-            [In]  Int32 nInputBufferSize,
-            [Out] out IntPtr lpOutputBuffer,
-            [In]  Int32 nOutputBufferSize
-        );
+        //[DllImport("powrprof.dll")]
+        //internal static extern uint CallNtPowerInformation(
+        //    [In]  UInt32 informationLevel,
+        //    [In]  IntPtr lpInputBuffer,
+        //    [In]  Int32 nInputBufferSize,
+        //    [Out] out IntPtr lpOutputBuffer,
+        //    [In]  Int32 nOutputBufferSize
+        //);
 
         [DllImport("powrprof.dll")]
         internal static extern byte SetSuspendState(
