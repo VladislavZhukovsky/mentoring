@@ -29,6 +29,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <RegisterForComInterop>true</RegisterForComInterop>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -43,9 +44,12 @@
   <ItemGroup>
     <Compile Include="Exceptions\PowerManagementException.cs" />
     <Compile Include="Internal\CoolingMode.cs" />
+    <Compile Include="IPowerManagementAdapter.cs" />
     <Compile Include="PowerManagementAdapter.cs" />
     <Compile Include="Internal\PowerManagementFunctions.cs" />
     <Compile Include="Internal\PowerInformationLevel.cs" />
+    <Compile Include="PowerManagementObjects\SystemBatteryState.cs" />
+    <Compile Include="PowerManagementObjects\SystemPowerInformation.cs" />
     <Compile Include="PowerManagementTypes\SystemBatteryState.cs" />
     <Compile Include="PowerManagementTypes\SystemPowerInformation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

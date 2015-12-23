@@ -14,14 +14,14 @@ namespace Task
         {
             try
             {
-                var adapter = new PowerManagementAdapter();
+                IPowerManagementAdapter adapter = new PowerManagementAdapter();
                 //var result = adapter.GetLastSleepTime();
                 //var result = adapter.GetLastWakeTime();
-                //var result = adapter.GetSystemBatteryState();
-                var result = adapter.GetSystemPowerInformation();
+                var result = adapter.GetSystemBatteryState();
+                //var result = adapter.GetSystemPowerInformation();
                 //adapter.ReserveHibernationFile();
                 //adapter.RemoveHibernationFile();
-                Console.WriteLine(result.ToString());
+                Console.WriteLine(result);
                 Console.WriteLine("done");
                 Console.WriteLine("press any key...");
             }

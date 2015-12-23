@@ -5,7 +5,7 @@ using System.Text;
 namespace PowerManagement.PowerManagementTypes
 {
     [StructLayout(LayoutKind.Sequential)]
-    public struct SystemBatteryState
+    internal struct SystemBatteryState
     {
         public bool AcOnLine;
         public bool BatteryPresent;
@@ -21,19 +21,5 @@ namespace PowerManagement.PowerManagementTypes
         public UInt32 EstimatedTime;
         public UInt32 DefaultAlert1;
         public UInt32 DefaultAlert2;
-
-        public override string ToString()
-        {
-            var sb = new StringBuilder();
-            sb.AppendLine(string.Format("AcOnLine :          {0}", AcOnLine));
-            sb.AppendLine(string.Format("BatteryPresent :    {0}", BatteryPresent));
-            sb.AppendLine(string.Format("Charging :          {0}", Charging));
-            sb.AppendLine(string.Format("Discharging :       {0}", Discharging));
-            sb.AppendLine(string.Format("MaxCapacity :       {0}", MaxCapacity));
-            sb.AppendLine(string.Format("RemainingCapacity : {0}", RemainingCapacity));
-            sb.AppendLine(string.Format("Rate :              {0}", Rate));
-            sb.AppendLine(string.Format("EstimatedTime :     {0}", EstimatedTime));
-            return sb.ToString();
-        }
     }
 }
