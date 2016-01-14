@@ -20,7 +20,8 @@ namespace Calculator
 
         int ICalculator.Add(int x, int y)
         {
-            return x + y;
+            var inner = new InnerCalculator();
+            return inner.Add(x, y);
         }
     }
 }

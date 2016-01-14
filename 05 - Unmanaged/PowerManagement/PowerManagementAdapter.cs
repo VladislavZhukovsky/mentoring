@@ -6,9 +6,12 @@ using PowerManagement.Internal;
 
 namespace PowerManagement
 {
-    public class PowerManagementAdapter
+    [ComVisible(true)]
+    [Guid("5FCAA83C-3311-457E-9C9E-C8C9861E4C43")]
+    [ClassInterface(ClassInterfaceType.None)]
+    public class PowerManagementAdapter: IPowerManagementAdapter
     {
-        public ulong GetLastSleepTime()
+        ulong IPowerManagementAdapter.GetLastSleepTime()
         {
             IntPtr retVal = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(UInt64)));
             PerformOperation(
@@ -25,7 +28,7 @@ namespace PowerManagement
             return lst;
         }
 
-        public ulong GetLastWakeTime()
+        ulong IPowerManagementAdapter.GetLastWakeTime()
         {
             IntPtr retVal = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(UInt64)));
             PerformOperation(
@@ -42,7 +45,7 @@ namespace PowerManagement
             return lwt;
         }
 
-        public SystemBatteryState GetSystemBatteryState()
+        PowerManagement.PowerManagementObjects.SystemBatteryState IPowerManagementAdapter.GetSystemBatteryState()
         {
             IntPtr retVal = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(SystemBatteryState)));
             PerformOperation(
@@ -56,10 +59,27 @@ namespace PowerManagement
                 false
             );
             SystemBatteryState sbs = (SystemBatteryState)Marshal.PtrToStructure(retVal, typeof(SystemBatteryState));
-            return sbs;
+            return new PowerManagementObjects.SystemBatteryState()
+            {
+                AcOnLine = sbs.AcOnLine,
+                BatteryPresent = sbs.BatteryPresent,
+                Charging = sbs.Charging,
+                Discharging = sbs.Discharging,
+                Spare1 = sbs.Spare1,
+                Spare2 = sbs.Spare2,
+                Spare3 = sbs.Spare3,
+                Spare4 = sbs.Spare4,
+                MaxCapacity = sbs.MaxCapacity,
+                RemainingCapacity = sbs.RemainingCapacity,
+                Rate = sbs.Rate,
+                EstimatedTime = sbs.EstimatedTime,
+                DefaultAlert1 = sbs.DefaultAlert1,
+                DefaultAlert2 = sbs.DefaultAlert2
+            };
+            //return sbs;
         }
 
-        public SystemPowerInformation GetSystemPowerInformation()
+        PowerManagement.PowerManagementObjects.SystemPowerInformation IPowerManagementAdapter.GetSystemPowerInformation()
         {
             IntPtr retVal = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(SystemPowerInformation)));
             PerformOperation(
@@ -73,10 +93,17 @@ namespace PowerManagement
                 false
             );
             SystemPowerInformation spi = (SystemPowerInformation)Marshal.PtrToStructure(retVal, typeof(SystemPowerInformation));
-            return spi;
+            return new PowerManagementObjects.SystemPowerInformation()
+            {
+                MaxIdlenessAllowed = spi.MaxIdlenessAllowed,
+                Idleness = spi.Idleness,
+                TimeRemaining = spi.TimeRemaining,
+                CoolingMode = spi.CoolingMode
+            };
+            //return spi;
         }
 
-        public void ReserveHibernationFile()
+        void IPowerManagementAdapter.ReserveHibernationFile()
         {
             byte lpInBuffer = 1;
             IntPtr lpInBufferPtr = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(byte)));
@@ -94,7 +121,7 @@ namespace PowerManagement
             );
         }
 
-        public void RemoveHibernationFile()
+        void IPowerManagementAdapter.RemoveHibernationFile()
         {
             byte lpInBuffer = 0;
             IntPtr lpInBufferPtr = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(byte)));
@@ -112,7 +139,7 @@ namespace PowerManagement
             );
         }
 
-        public void SetSuspendState()
+        void IPowerManagementAdapter.SetSuspendState()
         {
             PerformOperation(
                 PowerManagementFunctions.SetSuspendState(
