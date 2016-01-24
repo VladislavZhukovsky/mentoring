@@ -64,9 +64,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PowerManagement", "05 - Unm
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Calculator", "Calculator\Calculator.csproj", "{AFF27D86-1B5D-4310-9675-E1513972DAC0}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "06 - Services", "06 - Services", "{9A79528A-95E5-4C2E-86C9-923E6164042F}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "07 - Services", "07 - Services", "{9A79528A-95E5-4C2E-86C9-923E6164042F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyService", "06 - Services\MyService\MyService.csproj", "{E8F0A7D5-A920-46B9-949A-193A9E3D5556}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyService", "07 - Services\MyService\MyService.csproj", "{E8F0A7D5-A920-46B9-949A-193A9E3D5556}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
