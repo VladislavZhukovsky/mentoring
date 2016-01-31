@@ -153,8 +153,8 @@ namespace _03.Synchronization
             are.Reset();
             Task.Factory.StartNew(Action1);
             Task.Factory.StartNew(Action2);
-            Task.Factory.StartNew(Action3);
-            Task.Factory.StartNew(Action4);
+            //Task.Factory.StartNew(Action3);
+            //Task.Factory.StartNew(Action4);
             Thread.Sleep(2500);
             are.Set();
             Console.ReadKey();

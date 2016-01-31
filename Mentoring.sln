@@ -72,6 +72,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "08 - MessageQueues", "08 - 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyQueue", "08 - MessageQueues\MyQueue\MyQueue.csproj", "{C190D6C0-B973-4984-B17F-F8283B4E98E3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileProcessorService", "FileProcessorService\FileProcessorService.csproj", "{759F4042-A226-4BA6-99BA-132654A2CD36}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -170,6 +172,10 @@ Global
 		{C190D6C0-B973-4984-B17F-F8283B4E98E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C190D6C0-B973-4984-B17F-F8283B4E98E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C190D6C0-B973-4984-B17F-F8283B4E98E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{759F4042-A226-4BA6-99BA-132654A2CD36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{759F4042-A226-4BA6-99BA-132654A2CD36}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{759F4042-A226-4BA6-99BA-132654A2CD36}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{759F4042-A226-4BA6-99BA-132654A2CD36}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -199,5 +205,6 @@ Global
 		{AFF27D86-1B5D-4310-9675-E1513972DAC0} = {3B9E42CE-528A-44B6-864D-D9224183AF42}
 		{E8F0A7D5-A920-46B9-949A-193A9E3D5556} = {9A79528A-95E5-4C2E-86C9-923E6164042F}
 		{C190D6C0-B973-4984-B17F-F8283B4E98E3} = {1CBCCE9A-B24D-4867-8368-2FFAE39589FA}
+		{759F4042-A226-4BA6-99BA-132654A2CD36} = {9A79528A-95E5-4C2E-86C9-923E6164042F}
 	EndGlobalSection
 EndGlobal
