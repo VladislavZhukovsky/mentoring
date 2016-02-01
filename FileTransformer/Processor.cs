@@ -1,41 +1,34 @@
-﻿using System;
+﻿using PdfSharp.Drawing;
+using PdfSharp.Pdf;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using PdfSharp;
-using PdfSharp.Pdf;
-using PdfSharp.Drawing;
-using System.IO;
 
-namespace PDFSharpTest
+namespace FileTransformer
 {
-    public class Program
+    public class Processor
     {
-        static int DPI = 72;
-        static double PDF_WIDTH_INCHES = 8.27;
-        static double PDF_HEIGHT_INCHES = 11.69;
-        static int PDF_PIXELWIDTH = 595;
-        static int PDF_PIXELHEIGHT = 842;
-
-        static void Main(string[] args)
+        public Processor()
         {
-            double x = (double)1920 / 614;
-            int y = (int)Math.Round(1200 / x);
 
-            var path = @"War_Machine_mk_1_.jpg";
-            PdfDocument doc = new PdfDocument();
-            PdfPage page = doc.AddPage();
-            XGraphics gfx = XGraphics.FromPdfPage(page);
-
-
-
-            AddPicture(gfx, page, path, 0, 0);
-
-            doc.Save(Path.GetFileNameWithoutExtension(path) + "_1.pdf");
         }
 
-        static void AddPicture(XGraphics gfx, PdfPage page, string imagePath, int xPosition, int yPosition)
+        public void CreatePdf(IEnumerable<string> imagePaths)
+        {
+            PdfDocument doc = new PdfDocument();
+            foreach (var imagePath in imagePaths)
+            {
+                PdfPage page = doc.AddPage();
+                XGraphics gfx = XGraphics.FromPdfPage(page);
+                AddPicture(gfx, page, imagePath, 0, 0);
+            }
+            doc.Save("doc.pdf");
+        }
+
+        private void AddPicture(XGraphics gfx, PdfPage page, string imagePath, int xPosition, int yPosition)
         {
             if (!File.Exists(imagePath))
             {
@@ -46,10 +39,10 @@ namespace PDFSharpTest
             int imagePdfWidth;
             int imagePdfHeight;
             GetPdfImageSize(page, xImage, out imagePdfWidth, out imagePdfHeight);
-            gfx.DrawImage(xImage, xPosition, yPosition, imagePdfWidth, imagePdfHeight);//xImage.PixelWidth, xImage.PixelWidth);
+            gfx.DrawImage(xImage, xPosition, yPosition, imagePdfWidth, imagePdfHeight);
         }
 
-        static void GetPdfImageSize(PdfPage page, XImage image, out int width, out int height)
+        private void GetPdfImageSize(PdfPage page, XImage image, out int width, out int height)
         {
             if (image.PixelWidth > page.Width)
             {
@@ -69,6 +62,5 @@ namespace PDFSharpTest
                 width = (int)Math.Round(width / k);
             }
         }
-
     }
 }
