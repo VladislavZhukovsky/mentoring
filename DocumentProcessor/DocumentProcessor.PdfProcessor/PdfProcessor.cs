@@ -15,10 +15,12 @@ namespace DocumentProcessor.PdfProcessor
         private const string PDF_EXTENSION = ".pdf";
 
         private NamingManager namingManager;
+        private string destinationFolder;
 
-        public PdfProcessor()
+        public PdfProcessor(string destinationFolder)
         {
             namingManager = new NamingManager();
+            this.destinationFolder = destinationFolder;
         }
 
         public void Process(IEnumerable<string> files, string destinationFolder)
