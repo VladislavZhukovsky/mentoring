@@ -9,14 +9,14 @@ using System.Threading.Tasks;
 
 namespace FileTransformer
 {
-    public class Processor
+    public class PdfProcessor
     {
-        public Processor()
+        public PdfProcessor()
         {
 
         }
 
-        public void CreatePdf(IEnumerable<string> imagePaths)
+        public void CreatePdf(IEnumerable<string> imagePaths, string pdfPath)
         {
             PdfDocument doc = new PdfDocument();
             foreach (var imagePath in imagePaths)
@@ -25,7 +25,7 @@ namespace FileTransformer
                 XGraphics gfx = XGraphics.FromPdfPage(page);
                 AddPicture(gfx, page, imagePath, 0, 0);
             }
-            doc.Save("doc.pdf");
+            doc.Save(pdfPath);
         }
 
         private void AddPicture(XGraphics gfx, PdfPage page, string imagePath, int xPosition, int yPosition)
