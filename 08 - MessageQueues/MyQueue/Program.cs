@@ -11,7 +11,7 @@ namespace MyQueue
     {
         static void Main(string[] args)
         {
-            TransQueue();
+            PrivateQueue();
         }
 
         static void PrivateQueue()
@@ -28,12 +28,13 @@ namespace MyQueue
             }
             using (queue)
             {
-                queue.Formatter = new BinaryMessageFormatter();
-                queue.Send(new Foo());
-                var msg = queue.Peek();
+                queue.Formatter = new XmlMessageFormatter();
+                //queue.Send("message");
+                queue.Send(new QueueMessage() { Files = new List<string> { "file1", "file2" } });
                 try
                 {
-                    Console.WriteLine(msg.Body.ToString());
+                    var msg = queue.Peek();
+                    var body = (QueueMessage)msg.Body;
                     queue.Receive();
                 }
                 catch (Exception ex)
@@ -100,5 +101,13 @@ namespace MyQueue
         {
             return x.ToString();
         }
+    }
+
+    [Serializable]
+    public class QueueMessage
+    {
+        public QueueMessage() { }
+
+        public List<string> Files { get; set; }
     }
 }

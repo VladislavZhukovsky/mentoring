@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace FileProcessorService
+namespace DocumentProcessor.FileService
 {
     class FileProcessor
     {

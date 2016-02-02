@@ -1,5 +1,4 @@
-﻿using FileTransformer;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -7,18 +6,21 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using DocumentProcessor.Core;
+using DocumentProcessor.PdfProcessor;
+using System.Text.RegularExpressions;
 
-namespace ProcessorService
+namespace DocumentProcessor.ProcessorService
 {
     class Program
     {
         static void Main(string[] args)
         {
-            var transformer = new PdfProcessor();
-            var files = Directory.EnumerateFiles(Path.GetDirectoryName(Path.GetFullPath(Process.GetCurrentProcess().MainModule.FileName)));
+            IProcessor transformer = new DocumentProcessor.PdfProcessor.PdfProcessor();
+            var files = Directory.EnumerateFiles("Source");
             var images = files.Where(x => Path.GetExtension(x) == ".jpg");
 
-            transformer.CreatePdf(images, "pdf1.pdf");
+            transformer.Process(images, "Docs");
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using PdfSharp.Drawing;
+﻿using DocumentProcessor.Core;
+using PdfSharp.Drawing;
 using PdfSharp.Pdf;
 using System;
 using System.Collections.Generic;
@@ -7,16 +8,27 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FileTransformer
+namespace DocumentProcessor.PdfProcessor
 {
-    public class PdfProcessor
+    public class PdfProcessor: IProcessor
     {
+        private const string PDF_EXTENSION = ".pdf";
+
+        private NamingManager namingManager;
+
         public PdfProcessor()
         {
-
+            namingManager = new NamingManager();
         }
 
-        public void CreatePdf(IEnumerable<string> imagePaths, string pdfPath)
+        public void Process(IEnumerable<string> files, string destinationFolder)
+        {
+            var nextPdfName = namingManager.GetNextDocumentName(destinationFolder, PDF_EXTENSION);
+            var pdfPath = Path.Combine(destinationFolder, nextPdfName + PDF_EXTENSION);
+            CreatePdf(files, pdfPath);
+        }
+
+        private void CreatePdf(IEnumerable<string> imagePaths, string pdfPath)
         {
             PdfDocument doc = new PdfDocument();
             foreach (var imagePath in imagePaths)
