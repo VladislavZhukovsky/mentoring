@@ -19,7 +19,6 @@ namespace DocumentProcessor.FileService
         private AutoResetEvent sourceDirectoryChangedEvent = new AutoResetEvent(false);
         private string sourcePath;
         private string destinationPath;
-        private QueueManager queueManager;
 
         private FileSystemWatcher fileWatcher;
 
@@ -53,7 +52,6 @@ namespace DocumentProcessor.FileService
             stopWorkEvent.Reset();
             sourceDirectoryChangedEvent.Reset();
             fileWatcher.EnableRaisingEvents = true;
-            queueManager = new QueueManager();
             workThread.Start();
         }
 
@@ -69,33 +67,36 @@ namespace DocumentProcessor.FileService
             var movedFiles = new List<string>();
             do
             {
-                var files = Directory.EnumerateFiles(sourcePath);
-                if (files.Count() >= 3)
+                using (var queueManager = new QueueManager())
                 {
-                    foreach (var fileInfo in files)
+                    var files = Directory.EnumerateFiles(sourcePath);
+                    if (files.Count() >= 3)
                     {
-                        if (stopWorkEvent.WaitOne(TimeSpan.Zero))
-                            return;
-
-                        FileStream file;
-
-                        if (TryOpen(fileInfo, out file, FileMode.Open, FileAccess.ReadWrite, FileShare.None, 3))
+                        foreach (var fileInfo in files)
                         {
-                            file.Close();
+                            if (stopWorkEvent.WaitOne(TimeSpan.Zero))
+                                return;
 
-                            try
+                            FileStream file;
+
+                            if (TryOpen(fileInfo, out file, FileMode.Open, FileAccess.ReadWrite, FileShare.None, 3))
                             {
-                                File.Move(fileInfo, Path.Combine(destinationPath, Path.GetFileName(fileInfo)));
-                                movedFiles.Add(Path.GetFileName(fileInfo));
-                            }
-                            catch(IOException ex)
-                            {
-                                //log file not sent
+                                file.Close();
+
+                                try
+                                {
+                                    File.Move(fileInfo, Path.Combine(destinationPath, Path.GetFileName(fileInfo)));
+                                    movedFiles.Add(Path.GetFileName(fileInfo));
+                                }
+                                catch (IOException ex)
+                                {
+                                    //log file not sent
+                                }
                             }
                         }
+                        queueManager.SendFiles(movedFiles);
+                        movedFiles.Clear();
                     }
-                    queueManager.SendFiles(movedFiles);
-                    movedFiles.Clear();
                 }
             }
             while (

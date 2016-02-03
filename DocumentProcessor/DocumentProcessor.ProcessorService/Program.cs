@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using DocumentProcessor.Core;
 using DocumentProcessor.PdfProcessor;
 using System.Text.RegularExpressions;
+using DocumentProcessor.Core.Queue;
 
 namespace DocumentProcessor.ProcessorService
 {
@@ -16,7 +17,8 @@ namespace DocumentProcessor.ProcessorService
     {
         static void Main(string[] args)
         {
-            
+            var qm = new QueueManager();
+            var m = qm.ReceiveFiles();
         }
     }
 }
