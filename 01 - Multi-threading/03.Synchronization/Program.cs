@@ -16,7 +16,12 @@ namespace _03.Synchronization
         static Barrier b;
         static void Main(string[] args)
         {
-            ARESample();
+            //ARESample();
+            mre = new ManualResetEvent(false);
+            mre.Reset();
+            mre.Set();
+            var b = mre.WaitOne(TimeSpan.FromSeconds(5));
+
         }
 
         private static void MRESample()

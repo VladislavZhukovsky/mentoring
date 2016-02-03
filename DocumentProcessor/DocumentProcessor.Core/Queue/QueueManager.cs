@@ -4,17 +4,19 @@ using System.Linq;
 using System.Messaging;
 using System.Text;
 using System.Threading.Tasks;
+using DocumentProcessor.Core;
 
 namespace DocumentProcessor.Core.Queue
 {
     public class QueueManager: IDisposable
     {
-        private MessageQueue queue;
-        private IProcessor processor;
+        private static string QUEUE_NAME = @".\Private$\DocumentProcessorQueue";
 
-        public QueueManager(string queueName, IProcessor processor)
+        private MessageQueue queue;
+
+        public QueueManager()
         {
-            InitializeQueue(queueName);
+            InitializeQueue();
         }
 
         public void SendFiles(IEnumerable<string> files)
@@ -35,15 +37,15 @@ namespace DocumentProcessor.Core.Queue
             queue.ReceiveById(id);
         }
 
-        private void InitializeQueue(string queueName)
+        private void InitializeQueue()
         {
-            if (MessageQueue.Exists(queueName))
+            if (MessageQueue.Exists(QUEUE_NAME))
             {
-                queue = new MessageQueue(queueName);
+                queue = new MessageQueue(QUEUE_NAME);
             }
             else
             {
-                queue = MessageQueue.Create(queueName);
+                queue = MessageQueue.Create(QUEUE_NAME);
             }
             queue.Formatter = new XmlMessageFormatter();
         }

@@ -16,11 +16,7 @@ namespace DocumentProcessor.ProcessorService
     {
         static void Main(string[] args)
         {
-            IProcessor transformer = new DocumentProcessor.PdfProcessor.PdfProcessor();
-            var files = Directory.EnumerateFiles("Source");
-            var images = files.Where(x => Path.GetExtension(x) == ".jpg");
-
-            transformer.Process(images, "Docs");
+            
         }
     }
 }

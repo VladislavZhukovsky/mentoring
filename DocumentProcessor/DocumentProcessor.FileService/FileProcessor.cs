@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DocumentProcessor.Core.Queue;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -11,12 +12,14 @@ namespace DocumentProcessor.FileService
     class FileProcessor
     {
         internal const string ServiceName = "FileProcessorService";
+        private const int MAX_CHAIN_CAPACITY = 3;
 
         private Thread workThread;
         private ManualResetEvent stopWorkEvent = new ManualResetEvent(false);
         private AutoResetEvent sourceDirectoryChangedEvent = new AutoResetEvent(false);
         private string sourcePath;
         private string destinationPath;
+        private QueueManager queueManager;
 
         private FileSystemWatcher fileWatcher;
 
@@ -47,10 +50,10 @@ namespace DocumentProcessor.FileService
 
         protected /*override */void OnStart(string[] args)
         {
-
             stopWorkEvent.Reset();
             sourceDirectoryChangedEvent.Reset();
             fileWatcher.EnableRaisingEvents = true;
+            queueManager = new QueueManager();
             workThread.Start();
         }
 
@@ -63,30 +66,40 @@ namespace DocumentProcessor.FileService
 
         protected void WorkProcedure(object obj)
         {
+            var movedFiles = new List<string>();
             do
             {
-                foreach (var fileInfo in Directory.EnumerateFiles(sourcePath))
+                var files = Directory.EnumerateFiles(sourcePath);
+                if (files.Count() >= 3)
                 {
-                    if (stopWorkEvent.WaitOne(TimeSpan.Zero))
-                        return;
-
-                    FileStream file;
-
-                    if (TryOpen(fileInfo, out file, FileMode.Open, FileAccess.ReadWrite, FileShare.None, 3))
+                    foreach (var fileInfo in files)
                     {
-                        file.Close();
+                        if (stopWorkEvent.WaitOne(TimeSpan.Zero))
+                            return;
 
-                        File.Move(fileInfo, Path.Combine(destinationPath, Path.GetFileName(fileInfo)));
+                        FileStream file;
+
+                        if (TryOpen(fileInfo, out file, FileMode.Open, FileAccess.ReadWrite, FileShare.None, 3))
+                        {
+                            file.Close();
+
+                            try
+                            {
+                                File.Move(fileInfo, Path.Combine(destinationPath, Path.GetFileName(fileInfo)));
+                                movedFiles.Add(Path.GetFileName(fileInfo));
+                            }
+                            catch(IOException ex)
+                            {
+                                //log file not sent
+                            }
+                        }
                     }
+                    queueManager.SendFiles(movedFiles);
+                    movedFiles.Clear();
                 }
-
-
             }
             while (
-                WaitHandle.WaitAny(
-                    new WaitHandle[] { stopWorkEvent, sourceDirectoryChangedEvent },
-                    TimeSpan.FromMilliseconds(10000)
-                )!= 0
+                WaitHandle.WaitAny(new WaitHandle[] { stopWorkEvent, sourceDirectoryChangedEvent }, TimeSpan.FromMilliseconds(10000)) != 0
             );
         }
 
