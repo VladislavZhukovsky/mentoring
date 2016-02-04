@@ -6,8 +6,11 @@ using System.Threading.Tasks;
 
 namespace DocumentProcessor.Core.Processors
 {
-    public interface IProcessor
+    public class LoadImageException: Exception
     {
-        ProcessingResultEntry Process(IEnumerable<string> files, string workingFolder, string documentFolder);
+        public LoadImageException(string message):
+            base(message)
+        {
+        }
     }
 }

@@ -96,7 +96,7 @@ namespace DocumentProcessor.FileService
                                 }
                             }
                         }
-                        queueManager.SendFiles(movedFiles);
+                        queueManager.SendMessage(movedFiles);
                         movedFiles.Clear();
                     }
                 }

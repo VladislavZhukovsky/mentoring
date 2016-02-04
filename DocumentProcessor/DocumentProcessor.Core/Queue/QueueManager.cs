@@ -19,19 +19,19 @@ namespace DocumentProcessor.Core.Queue
             InitializeQueue();
         }
 
-        public void SendFiles(IEnumerable<string> files)
+        public void SendMessage(IEnumerable<string> files, int @try = 0)
         {
-            queue.Send(new QueueMessage() { Files = files.ToList() });
+            queue.Send(new QueueMessage(files, @try));
         }
 
-        public IEnumerable<string> ReceiveFiles()
+        public QueueMessage ReceiveMessage()
         {
             if (queue.GetMessageEnumerator2().MoveNext())
             {
                 var message = queue.Peek(TimeSpan.FromSeconds(10));
                 var queueMessage = (QueueMessage)message.Body;
                 queue.Receive();
-                return queueMessage.Files;
+                return queueMessage;
             }
             return null;
         }

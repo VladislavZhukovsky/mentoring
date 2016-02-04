@@ -18,25 +18,46 @@ namespace DocumentProcessor.Core.Processors
         private string workingFolder;
         private object locker = new object();
 
+        private StringBuilder logBuilder;
+
         public PdfProcessor()
         {
             namingManager = new NamingManager();
+            logBuilder = new StringBuilder();
         }
 
-        public void Process(IEnumerable<string> files, string workingFolder, string documentFolder)
+        public ProcessingResultEntry Process(IEnumerable<string> files, string workingFolder, string documentFolder)
         {
-            this.workingFolder = workingFolder;
-            var doc = CreatePdf(files);
-            lock(locker)
+            try
             {
-                var nextPdfName = namingManager.GetNextDocumentName(documentFolder, PDF_EXTENSION);
-                var pdfPath = Path.Combine(documentFolder, nextPdfName + PDF_EXTENSION);
-                doc.Save(pdfPath);
+                logBuilder.AppendLine("=====Start processing files:");
+                foreach(var item in files)
+                {
+                    logBuilder.AppendLine(String.Format("===Filename: {0}", item));
+                }
+                this.workingFolder = workingFolder;
+                var doc = CreatePdf(files);
+                lock (locker)
+                {
+                    var nextPdfName = namingManager.GetNextDocumentName(documentFolder, PDF_EXTENSION);
+                    logBuilder.AppendLine(String.Format("===Document name: {0}", nextPdfName));
+                    var pdfPath = Path.Combine(documentFolder, nextPdfName + PDF_EXTENSION);
+                    doc.Save(pdfPath);
+                }
+                logBuilder.AppendLine("=====End processing successfully");
+                return new ProcessingResultEntry() { Result = ProcessingResult.Success, Log = logBuilder.ToString() };
+            }
+            catch(Exception ex)
+            {
+                logBuilder.AppendLine("====ERROR");
+                logBuilder.AppendLine(ex.Message);
+                return new ProcessingResultEntry() { Result = ProcessingResult.Failed, Log = logBuilder.ToString() };
             }
         }
 
         private PdfDocument CreatePdf(IEnumerable<string> imagePaths)
         {
+            logBuilder.AppendLine("===Creating pdf");
             PdfDocument doc = new PdfDocument();
             foreach (var imagePath in imagePaths)
             {
@@ -50,12 +71,20 @@ namespace DocumentProcessor.Core.Processors
         private void AddPicture(XGraphics gfx, PdfPage page, string imageName, int xPosition, int yPosition)
         {
             var imagePath = Path.Combine(workingFolder, imageName);
+            logBuilder.AppendLine(String.Format("===Processing image: {0}", imagePath));
             if (!File.Exists(imagePath))
             {
                 throw new FileNotFoundException(String.Format("Could not find image {0}.", imagePath));
             }
-
-            XImage xImage = XImage.FromFile(imagePath);
+            XImage xImage;
+            try
+            {
+                xImage = XImage.FromFile(imagePath);
+            }
+            catch(Exception)
+            {
+                throw new LoadImageException(string.Format("Could not load the image {0}", imagePath));
+            }
             int imagePdfWidth;
             int imagePdfHeight;
             GetPdfImageSize(page, xImage, out imagePdfWidth, out imagePdfHeight);

@@ -13,9 +13,10 @@ namespace _02.TPL
         static void Main(string[] args)
         {
             var t = new Task(Action1);
+            var t1 = new Task(() => { Action2("333"); });
             t.Start();
-
-            t.Wait();
+            t1.Start();
+            Console.ReadKey();
         }
 
         static void Action1()
@@ -24,7 +25,7 @@ namespace _02.TPL
             Thread.CurrentThread.IsBackground = true;
             for (var k = 0; k != 10; k++)
             {
-                Console.WriteLine("1" + Thread.CurrentThread.IsBackground);
+                Console.WriteLine("1" + Thread.CurrentThread.ManagedThreadId);
                 Thread.Sleep(100);
             }
         }
@@ -33,7 +34,7 @@ namespace _02.TPL
         {
             for (var k = 0; k != 10; k++)
             {
-                Console.WriteLine(s + Thread.CurrentThread.IsBackground);
+                Console.WriteLine(s + Thread.CurrentThread.ManagedThreadId);
                 Thread.Sleep(500);
             }
         }
