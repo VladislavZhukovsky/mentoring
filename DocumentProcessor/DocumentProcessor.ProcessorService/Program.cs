@@ -7,7 +7,6 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using DocumentProcessor.Core;
-using DocumentProcessor.PdfProcessor;
 using System.Text.RegularExpressions;
 using DocumentProcessor.Core.Queue;
 
@@ -17,8 +16,9 @@ namespace DocumentProcessor.ProcessorService
     {
         static void Main(string[] args)
         {
-            var qm = new QueueManager();
-            var m = qm.ReceiveFiles();
+            var workingFolder = @"D:\Vlad\Mentoring\DocumentProcessor\Destination";
+            var documentFolder = @"D:\Vlad\Mentoring\DocumentProcessor\Docs";
+            var processor = new DocumentProcessor(workingFolder, documentFolder);
         }
     }
 }

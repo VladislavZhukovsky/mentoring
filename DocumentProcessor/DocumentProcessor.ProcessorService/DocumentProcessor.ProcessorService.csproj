@@ -57,10 +57,6 @@
       <Project>{a0a17443-9aaa-4ff3-a8a0-2a0d5e0271ac}</Project>
       <Name>DocumentProcessor.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\DocumentProcessor.PdfProcessor\DocumentProcessor.PdfProcessor.csproj">
-      <Project>{4c78ebe0-a77e-4be8-a8db-681ecfb2cc8b}</Project>
-      <Name>DocumentProcessor.PdfProcessor</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

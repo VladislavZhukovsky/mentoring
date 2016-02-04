@@ -65,10 +65,11 @@ namespace DocumentProcessor.FileService
         protected void WorkProcedure(object obj)
         {
             var movedFiles = new List<string>();
-            do
+            using (var queueManager = new QueueManager())
             {
-                using (var queueManager = new QueueManager())
+                do
                 {
+                    Console.WriteLine("Scan");
                     var files = Directory.EnumerateFiles(sourcePath);
                     if (files.Count() >= 3)
                     {
@@ -85,6 +86,7 @@ namespace DocumentProcessor.FileService
 
                                 try
                                 {
+                                    Console.WriteLine("Move");
                                     File.Move(fileInfo, Path.Combine(destinationPath, Path.GetFileName(fileInfo)));
                                     movedFiles.Add(Path.GetFileName(fileInfo));
                                 }
@@ -98,10 +100,10 @@ namespace DocumentProcessor.FileService
                         movedFiles.Clear();
                     }
                 }
+                while (
+                    WaitHandle.WaitAny(new WaitHandle[] { stopWorkEvent, sourceDirectoryChangedEvent }, TimeSpan.FromMilliseconds(10000)) != 0
+                );
             }
-            while (
-                WaitHandle.WaitAny(new WaitHandle[] { stopWorkEvent, sourceDirectoryChangedEvent }, TimeSpan.FromMilliseconds(10000)) != 0
-            );
         }
 
         private bool TryOpen(string fileName, out FileStream file, FileMode fileMode, FileAccess fileAccess, FileShare fileShare, int count)

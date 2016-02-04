@@ -14,8 +14,8 @@ namespace DocumentProcessor.FileService
         {
             string currentDir = Path.GetDirectoryName(Path.GetFullPath(Process.GetCurrentProcess().MainModule.FileName));
 
-            string sourceDir = Path.Combine(currentDir, "Source");
-            string dstDir = Path.Combine(currentDir, "Destination");
+            string sourceDir = @"D:\Vlad\Mentoring\DocumentProcessor\Source";
+            string dstDir =    @"D:\Vlad\Mentoring\DocumentProcessor\Destination";
 
             //Debugger.Launch();
 

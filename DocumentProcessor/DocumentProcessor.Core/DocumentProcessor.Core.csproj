@@ -30,6 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PdfSharp">
+      <HintPath>..\..\libs\PdfSharp\PdfSharp.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Messaging" />
@@ -40,8 +43,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IProcessor.cs" />
+    <Compile Include="Processors\IProcessor.cs" />
     <Compile Include="NamingManager.cs" />
+    <Compile Include="Processors\PdfProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queue\QueueManager.cs" />
     <Compile Include="Queue\QueueMessage.cs" />

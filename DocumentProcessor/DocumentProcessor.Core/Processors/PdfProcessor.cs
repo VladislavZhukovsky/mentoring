@@ -8,29 +8,34 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DocumentProcessor.PdfProcessor
+namespace DocumentProcessor.Core.Processors
 {
     public class PdfProcessor: IProcessor
     {
         private const string PDF_EXTENSION = ".pdf";
 
         private NamingManager namingManager;
-        private string destinationFolder;
+        private string workingFolder;
+        private object locker = new object();
 
-        public PdfProcessor(string destinationFolder)
+        public PdfProcessor()
         {
             namingManager = new NamingManager();
-            this.destinationFolder = destinationFolder;
         }
 
-        public void Process(IEnumerable<string> files, string destinationFolder)
+        public void Process(IEnumerable<string> files, string workingFolder, string documentFolder)
         {
-            var nextPdfName = namingManager.GetNextDocumentName(destinationFolder, PDF_EXTENSION);
-            var pdfPath = Path.Combine(destinationFolder, nextPdfName + PDF_EXTENSION);
-            CreatePdf(files, pdfPath);
+            this.workingFolder = workingFolder;
+            var doc = CreatePdf(files);
+            lock(locker)
+            {
+                var nextPdfName = namingManager.GetNextDocumentName(documentFolder, PDF_EXTENSION);
+                var pdfPath = Path.Combine(documentFolder, nextPdfName + PDF_EXTENSION);
+                doc.Save(pdfPath);
+            }
         }
 
-        private void CreatePdf(IEnumerable<string> imagePaths, string pdfPath)
+        private PdfDocument CreatePdf(IEnumerable<string> imagePaths)
         {
             PdfDocument doc = new PdfDocument();
             foreach (var imagePath in imagePaths)
@@ -39,11 +44,12 @@ namespace DocumentProcessor.PdfProcessor
                 XGraphics gfx = XGraphics.FromPdfPage(page);
                 AddPicture(gfx, page, imagePath, 0, 0);
             }
-            doc.Save(pdfPath);
+            return doc;
         }
 
-        private void AddPicture(XGraphics gfx, PdfPage page, string imagePath, int xPosition, int yPosition)
+        private void AddPicture(XGraphics gfx, PdfPage page, string imageName, int xPosition, int yPosition)
         {
+            var imagePath = Path.Combine(workingFolder, imageName);
             if (!File.Exists(imagePath))
             {
                 throw new FileNotFoundException(String.Format("Could not find image {0}.", imagePath));

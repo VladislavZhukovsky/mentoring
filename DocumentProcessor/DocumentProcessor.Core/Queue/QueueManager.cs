@@ -21,15 +21,19 @@ namespace DocumentProcessor.Core.Queue
 
         public void SendFiles(IEnumerable<string> files)
         {
-            
             queue.Send(new QueueMessage() { Files = files.ToList() });
         }
 
         public IEnumerable<string> ReceiveFiles()
         {
-            var message = queue.Receive();
-            var queueMessage = (QueueMessage)message.Body;
-            return queueMessage.Files;
+            if (queue.GetMessageEnumerator2().MoveNext())
+            {
+                var message = queue.Peek(TimeSpan.FromSeconds(10));
+                var queueMessage = (QueueMessage)message.Body;
+                queue.Receive();
+                return queueMessage.Files;
+            }
+            return null;
         }
 
         public void ReceiveById(string id)
@@ -47,7 +51,7 @@ namespace DocumentProcessor.Core.Queue
             {
                 queue = MessageQueue.Create(QUEUE_NAME);
             }
-            queue.Formatter = new XmlMessageFormatter();
+            queue.Formatter = new XmlMessageFormatter(new Type[] { typeof(QueueMessage) });
         }
 
         public void Dispose()

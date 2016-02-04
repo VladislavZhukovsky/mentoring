@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DocumentProcessor.Core
+namespace DocumentProcessor.Core.Processors
 {
     public interface IProcessor
     {
-        void Process(IEnumerable<string> files, string destinationFolder);
+        void Process(IEnumerable<string> files, string workingFolder, string documentFolder);
     }
 }
