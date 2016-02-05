@@ -10,22 +10,24 @@ namespace DocumentProcessor.Core.Queue
     public class QueueMessage
     {
         public List<string> Files { get; set; }
-        public int Try { get; set; }
+        public int Attempt { get; set; }
+        public int Id { get; set; }
 
         public QueueMessage()
         {
+            Id = Math.Abs(Guid.NewGuid().GetHashCode());
         }
 
-        public QueueMessage(IEnumerable<string> files)
+        public QueueMessage(IEnumerable<string> files): this()
         {
             Files = files.ToList();
-            Try = 0;
+            Attempt = 0;
         }
 
-        public QueueMessage(IEnumerable<string> files, int @try)
+        public QueueMessage(IEnumerable<string> files, int @try): this(files)
         {
-            Files = files.ToList();
-            Try = @try;
+            //Files = files.ToList();
+            Attempt = @try;
         }
     }
 }

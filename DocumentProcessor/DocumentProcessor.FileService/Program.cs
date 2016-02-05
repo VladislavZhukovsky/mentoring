@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NLog;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -16,8 +17,6 @@ namespace DocumentProcessor.FileService
 
             string sourceDir = @"D:\Vlad\Mentoring\DocumentProcessor\Source";
             string dstDir =    @"D:\Vlad\Mentoring\DocumentProcessor\Destination";
-
-            //Debugger.Launch();
 
             var fileProcessor = new FileProcessor(sourceDir, dstDir);
         }

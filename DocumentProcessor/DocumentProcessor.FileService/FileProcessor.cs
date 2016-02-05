@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using NLog;
 
 namespace DocumentProcessor.FileService
 {
@@ -19,6 +20,7 @@ namespace DocumentProcessor.FileService
         private AutoResetEvent sourceDirectoryChangedEvent = new AutoResetEvent(false);
         private string sourcePath;
         private string destinationPath;
+        private Logger logger;
 
         private FileSystemWatcher fileWatcher;
 
@@ -33,6 +35,7 @@ namespace DocumentProcessor.FileService
             workThread = new Thread(WorkProcedure);
             Directory.CreateDirectory(inRootPath);
             Directory.CreateDirectory(outRootPath);
+            logger = LogManager.GetCurrentClassLogger();
             fileWatcher = new FileSystemWatcher(sourcePath);
             fileWatcher.EnableRaisingEvents = false;
 
@@ -49,6 +52,7 @@ namespace DocumentProcessor.FileService
 
         protected /*override */void OnStart(string[] args)
         {
+            logger.Info("Starting service...");
             stopWorkEvent.Reset();
             sourceDirectoryChangedEvent.Reset();
             fileWatcher.EnableRaisingEvents = true;
@@ -57,6 +61,7 @@ namespace DocumentProcessor.FileService
 
         //protected override void OnStop()
         //{
+        //    logger.Info("=====Stopping service...");
         //    fileWatcher.EnableRaisingEvents = false;
         //    stopWorkEvent.Set();
         //    workThread.Join();
@@ -70,34 +75,48 @@ namespace DocumentProcessor.FileService
                 do
                 {
                     if (stopWorkEvent.WaitOne(TimeSpan.Zero))
+                    {
                         return;
-                    Console.WriteLine("Scan");
+                    }
+                    logger.Info("Scanning folder");
                     var files = Directory.EnumerateFiles(sourcePath);
                     if (files.Count() >= 3)
                     {
+                        logger.Info("Moving files");
+
                         foreach (var fileInfo in files)
                         {
-
                             FileStream file;
-
                             if (TryOpen(fileInfo, out file, FileMode.Open, FileAccess.ReadWrite, FileShare.None, 3))
                             {
                                 file.Close();
 
                                 try
                                 {
-                                    Console.WriteLine("Move");
+                                    logger.Info("Moving file {0}", fileInfo);
                                     File.Move(fileInfo, Path.Combine(destinationPath, Path.GetFileName(fileInfo)));
                                     movedFiles.Add(Path.GetFileName(fileInfo));
+                                    logger.Info("File {0} moved successfully", Path.GetFileName(fileInfo));
                                 }
                                 catch (IOException ex)
                                 {
-                                    //log file not sent
+                                    logger.Warn("File {0} not moved", Path.GetFileName(fileInfo));
+                                    logger.Warn(ex.Message);
                                 }
                             }
+                            else
+                            {
+                                logger.Warn("File {0} not opened", Path.GetFileName(fileInfo));
+                            }
                         }
-                        queueManager.SendMessage(movedFiles);
+                        var message = new QueueMessage(movedFiles);
+                        queueManager.SendMessage(message);
+                        logger.Info("Message {0} sent", message.Id);
                         movedFiles.Clear();
+                    }
+                    else
+                    {
+                        logger.Info("No files in directory");
                     }
                 }
                 while (
@@ -113,7 +132,6 @@ namespace DocumentProcessor.FileService
                 try
                 {
                     file = new FileStream(fileName, fileMode, fileAccess, fileShare);
-
                     return true;
                 }
                 catch (IOException)
@@ -121,7 +139,6 @@ namespace DocumentProcessor.FileService
                     Thread.Sleep(5000);
                 }
             }
-
             file = null;
             return false;
         }

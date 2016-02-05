@@ -19,9 +19,9 @@ namespace DocumentProcessor.Core.Queue
             InitializeQueue();
         }
 
-        public void SendMessage(IEnumerable<string> files, int @try = 0)
+        public void SendMessage(QueueMessage message)
         {
-            queue.Send(new QueueMessage(files, @try));
+            queue.Send(message);
         }
 
         public QueueMessage ReceiveMessage()
