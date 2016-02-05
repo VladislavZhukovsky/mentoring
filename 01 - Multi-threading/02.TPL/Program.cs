@@ -25,7 +25,7 @@ namespace _02.TPL
             Thread.CurrentThread.IsBackground = true;
             for (var k = 0; k != 10; k++)
             {
-                Console.WriteLine("1" + Thread.CurrentThread.ManagedThreadId);
+                Console.WriteLine("1 " + Task.CurrentId);
                 Thread.Sleep(100);
             }
         }
@@ -34,7 +34,7 @@ namespace _02.TPL
         {
             for (var k = 0; k != 10; k++)
             {
-                Console.WriteLine(s + Thread.CurrentThread.ManagedThreadId);
+                Console.WriteLine(s + " " + Task.CurrentId);
                 Thread.Sleep(500);
             }
         }

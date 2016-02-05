@@ -69,14 +69,14 @@ namespace DocumentProcessor.FileService
             {
                 do
                 {
+                    if (stopWorkEvent.WaitOne(TimeSpan.Zero))
+                        return;
                     Console.WriteLine("Scan");
                     var files = Directory.EnumerateFiles(sourcePath);
                     if (files.Count() >= 3)
                     {
                         foreach (var fileInfo in files)
                         {
-                            if (stopWorkEvent.WaitOne(TimeSpan.Zero))
-                                return;
 
                             FileStream file;
 

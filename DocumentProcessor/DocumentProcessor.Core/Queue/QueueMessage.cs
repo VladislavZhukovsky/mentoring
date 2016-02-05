@@ -12,6 +12,10 @@ namespace DocumentProcessor.Core.Queue
         public List<string> Files { get; set; }
         public int Try { get; set; }
 
+        public QueueMessage()
+        {
+        }
+
         public QueueMessage(IEnumerable<string> files)
         {
             Files = files.ToList();

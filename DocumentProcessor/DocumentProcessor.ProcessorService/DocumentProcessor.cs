@@ -17,24 +17,25 @@ namespace DocumentProcessor.ProcessorService
         private const string FAILED_FOLDER_NAME = "Failed";
 
         private Thread workThread;
-        private AutoResetEvent getMessageEvent;
+        private ManualResetEvent stopWorkEvent = new ManualResetEvent(false);
         private QueueManager queueManager;
         private IProcessor processor;
         private string workingFolder;
         private string documentFolder;
         private string failedFolder;
+        private List<Task> tasks;
 
         public DocumentProcessor(string workingFolder, string documentFolder)
         {
             this.workingFolder = workingFolder;
             this.documentFolder = documentFolder;
-            this.failedFolder = Path.Combine(workingFolder, failedFolder);
+            this.failedFolder = Path.Combine(workingFolder, FAILED_FOLDER_NAME);
             Directory.CreateDirectory(workingFolder);
             Directory.CreateDirectory(documentFolder);
             Directory.CreateDirectory(failedFolder);
+            tasks = new List<Task>();
             workThread = new Thread(WorkProcedure);
             processor = new PdfProcessor();
-            getMessageEvent = new AutoResetEvent(false);
             OnStart(null);
         }
 
@@ -44,24 +45,31 @@ namespace DocumentProcessor.ProcessorService
             {
                 do
                 {
+                    if (stopWorkEvent.WaitOne(TimeSpan.Zero))
+                    {
+                        Task.WaitAll(tasks.ToArray(), TimeSpan.FromMinutes(1).Milliseconds);
+                        return;
+                    }
                     Console.WriteLine("Receive");
                     var message = queueManager.ReceiveMessage();
                     var task = new Task(() => ProcessFiles(message.Files, message.Try));
+                    tasks.Add(task);
                     task.Start();
+                    tasks.RemoveAll(x => x.IsCompleted);
                 }
-                while (!getMessageEvent.WaitOne(TimeSpan.FromSeconds(7)));
+                while (!stopWorkEvent.WaitOne(TimeSpan.FromSeconds(7)));
             }
         }
 
         protected /*override*/ void OnStart(string[] args)
         {
-            getMessageEvent.Reset();
+            stopWorkEvent.Reset();
             workThread.Start();
         }
 
         //protected override void OnStop()
         //{
-        //    base.OnStop();
+        //    stopWorkEvent.Set();
         //}
 
         private void ProcessFiles(IEnumerable<string> files, int @try)
