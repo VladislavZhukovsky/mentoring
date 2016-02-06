@@ -37,15 +37,17 @@ namespace DocumentProcessor.Core.Processors
                     logBuilder.AppendLine(String.Format("===Filename: {0}", item));
                 }
                 this.workingFolder = workingFolder;
-                var doc = CreatePdf(files);
-                lock (locker)
+                using (var doc = CreatePdf(files))
                 {
-                    var nextPdfName = namingManager.GetNextDocumentName(documentFolder, PDF_EXTENSION);
-                    logBuilder.AppendLine(String.Format("===Document name: {0}", nextPdfName));
-                    var pdfPath = Path.Combine(documentFolder, nextPdfName + PDF_EXTENSION);
-                    doc.Save(pdfPath);
+                    lock (locker)
+                    {
+                        var nextPdfName = namingManager.GetNextDocumentName(documentFolder, PDF_EXTENSION);
+                        logBuilder.AppendLine(String.Format("===Document name: {0}", nextPdfName));
+                        var pdfPath = Path.Combine(documentFolder, nextPdfName + PDF_EXTENSION);
+                        doc.Save(pdfPath);
+                    }
+                    logBuilder.AppendLine("=====End processing successfully");
                 }
-                logBuilder.AppendLine("=====End processing successfully");
                 return new ProcessingResultEntry() { Result = ProcessingResult.Success, Log = logBuilder.ToString() };
             }
             catch(Exception ex)
@@ -80,16 +82,18 @@ namespace DocumentProcessor.Core.Processors
             XImage xImage;
             try
             {
-                xImage = XImage.FromFile(imagePath);
+                using (xImage = XImage.FromFile(imagePath))
+                {
+                    int imagePdfWidth;
+                    int imagePdfHeight;
+                    GetPdfImageSize(page, xImage, out imagePdfWidth, out imagePdfHeight);
+                    gfx.DrawImage(xImage, xPosition, yPosition, imagePdfWidth, imagePdfHeight);
+                }
             }
             catch(Exception)
             {
                 throw new LoadImageException(string.Format("Could not load the image {0}", imagePath));
             }
-            int imagePdfWidth;
-            int imagePdfHeight;
-            GetPdfImageSize(page, xImage, out imagePdfWidth, out imagePdfHeight);
-            gfx.DrawImage(xImage, xPosition, yPosition, imagePdfWidth, imagePdfHeight);
         }
 
         private void GetPdfImageSize(PdfPage page, XImage image, out int width, out int height)

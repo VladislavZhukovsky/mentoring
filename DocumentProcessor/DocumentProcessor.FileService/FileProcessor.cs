@@ -1,13 +1,11 @@
 ﻿using DocumentProcessor.Core.Queue;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using NLog;
 using System.ServiceProcess;
+using System.Threading;
 
 namespace DocumentProcessor.FileService
 {
@@ -43,7 +41,6 @@ namespace DocumentProcessor.FileService
             fileWatcher.Changed += SourceDirectoryChanged;
             fileWatcher.Created += SourceDirectoryChanged;
             fileWatcher.Renamed += SourceDirectoryChanged;
-            OnStart(null);
         }
 
         private void SourceDirectoryChanged(object sender, FileSystemEventArgs e)
@@ -54,6 +51,7 @@ namespace DocumentProcessor.FileService
         protected override void OnStart(string[] args)
         {
             logger.Info("Starting service...");
+            logger.Info(sourcePath);
             stopWorkEvent.Reset();
             sourceDirectoryChangedEvent.Reset();
             fileWatcher.EnableRaisingEvents = true;

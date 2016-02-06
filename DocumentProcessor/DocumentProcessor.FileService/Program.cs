@@ -1,11 +1,6 @@
-﻿using NLog;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ServiceProcess;
 
 namespace DocumentProcessor.FileService
 {
@@ -13,12 +8,10 @@ namespace DocumentProcessor.FileService
     {
         static void Main(string[] args)
         {
-            string currentDir = Path.GetDirectoryName(Path.GetFullPath(Process.GetCurrentProcess().MainModule.FileName));
+            string sourceDir = @"D:\DocumentProcessor\Source";
+            string dstDir =    @"D:\DocumentProcessor\Destination";
 
-            string sourceDir = @"D:\Vlad\Mentoring\DocumentProcessor\Source";
-            string dstDir =    @"D:\Vlad\Mentoring\DocumentProcessor\Destination";
-
-            var fileProcessor = new FileProcessor(sourceDir, dstDir);
+            ServiceBase.Run(new FileProcessor(sourceDir, dstDir));
         }
     }
 }
