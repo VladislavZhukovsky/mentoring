@@ -30,6 +30,7 @@ namespace DocumentProcessor.Core.Processors
         {
             try
             {
+                logBuilder.Clear();
                 logBuilder.AppendLine("=====Start processing files:");
                 foreach(var item in files)
                 {

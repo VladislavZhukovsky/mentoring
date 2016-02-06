@@ -20,7 +20,6 @@ namespace DocumentProcessor.ProcessorService
         private Thread workThread;
         private ManualResetEvent stopWorkEvent = new ManualResetEvent(false);
         private QueueManager queueManager;
-        private IProcessor processor;
         private string workingFolder;
         private string documentFolder;
         private string failedFolder;
@@ -38,7 +37,6 @@ namespace DocumentProcessor.ProcessorService
             logger = LogManager.GetCurrentClassLogger();
             tasks = new List<Task>();
             workThread = new Thread(WorkProcedure);
-            processor = new PdfProcessor();
             OnStart(null);
         }
 
@@ -94,6 +92,7 @@ namespace DocumentProcessor.ProcessorService
             logBuilder.AppendLine(string.Format("INFO | Start processing message with id {0}", message.Id));
             if (message.Files != null)
             {
+                IProcessor processor = new PdfProcessor();
                 var result = processor.Process(message.Files, workingFolder, documentFolder);
                 logBuilder.AppendLine("INFO | Document processor log");
                 logBuilder.AppendLine(result.Log);
