@@ -7,12 +7,13 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using NLog;
+using System.ServiceProcess;
 
 namespace DocumentProcessor.FileService
 {
-    class FileProcessor
+    public class FileProcessor: ServiceBase
     {
-        internal const string ServiceName = "FileProcessorService";
+        private const string SERVICE_NAME = "FileProcessor";
         private const int MAX_CHAIN_CAPACITY = 3;
 
         private Thread workThread;
@@ -26,9 +27,9 @@ namespace DocumentProcessor.FileService
 
         public FileProcessor(string inRootPath, string outRootPath)
         {
-            //this.CanStop = true;
-            //this.ServiceName = FileProcessor.SericeName;
-            //this.AutoLog = false;
+            this.CanStop = true;
+            this.ServiceName = SERVICE_NAME;
+            this.AutoLog = false;
 
             sourcePath = inRootPath;
             destinationPath = outRootPath;
@@ -50,7 +51,7 @@ namespace DocumentProcessor.FileService
             sourceDirectoryChangedEvent.Set();
         }
 
-        protected /*override */void OnStart(string[] args)
+        protected override void OnStart(string[] args)
         {
             logger.Info("Starting service...");
             stopWorkEvent.Reset();
@@ -59,13 +60,13 @@ namespace DocumentProcessor.FileService
             workThread.Start();
         }
 
-        //protected override void OnStop()
-        //{
-        //    logger.Info("=====Stopping service...");
-        //    fileWatcher.EnableRaisingEvents = false;
-        //    stopWorkEvent.Set();
-        //    workThread.Join();
-        //}
+        protected override void OnStop()
+        {
+            logger.Info("=====Stopping service...");
+            fileWatcher.EnableRaisingEvents = false;
+            stopWorkEvent.Set();
+            workThread.Join();
+        }
 
         protected void WorkProcedure(object obj)
         {
