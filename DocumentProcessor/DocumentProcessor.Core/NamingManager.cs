@@ -41,10 +41,5 @@ namespace DocumentProcessor.Core
             var nextDocumentName = DOCUMENT_PREFIX + String.Format(DOCUMENT_NUMBER_FORMAT, nextNumber);
             return nextDocumentName;
         }
-
-        private bool IsUnderConvention(string filename)
-        {
-            return true;
-        }
     }
 }

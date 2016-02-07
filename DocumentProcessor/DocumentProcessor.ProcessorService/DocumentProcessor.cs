@@ -25,7 +25,7 @@ namespace DocumentProcessor.ProcessorService
         private string documentFolder;
         private string failedFolder;
         private Logger logger;
-        private List<Task> tasks;
+        private List<Task> tasks; //container for all executing processing tasks
 
         public DocumentProcessor(string workingFolder, string documentFolder)
         {
@@ -44,10 +44,41 @@ namespace DocumentProcessor.ProcessorService
             workThread = new Thread(WorkProcedure);
         }
 
+        /// <summary>
+        /// On service start:
+        /// starts workingThread
+        /// </summary>
+        /// <param name="args"></param>
+        protected override void OnStart(string[] args)
+        {
+            logger.Info("=====Starting service...");
+            stopWorkEvent.Reset();
+            workThread.Start();
+        }
+
+        /// <summary>
+        /// On service stop:
+        /// set stopWorkEvent to stop the working thread
+        /// wait the end of working thread
+        /// </summary>
+        protected override void OnStop()
+        {
+            logger.Info("Stopping service...");
+            stopWorkEvent.Set();
+            workThread.Join();
+            logger.Info("=====Finish");
+        }
+
+        /// <summary>
+        /// Scans working folder every 7 seconds
+        /// starts processing tasks that could be executed simultaneously
+        /// Receives messages from the queue
+        /// </summary>
         private void WorkProcedure()
         {
             try
             {
+                //using for IDisposable QueueManager
                 using (queueManager = new QueueManager())
                 {
                     do
@@ -61,7 +92,7 @@ namespace DocumentProcessor.ProcessorService
                         if (message != null)
                         {
                             logger.Info("Processing message with id {0}", message.Id);
-                            var task = new Task(() => ProcessMessage(message));
+                            var task = new Task(() => ProcessMessage(message)); //multi-threading WOW!!!
                             tasks.Add(task);
                             task.Start();
                         }
@@ -69,9 +100,11 @@ namespace DocumentProcessor.ProcessorService
                         {
                             logger.Info("Queue is empty");
                         }
+                        //remove all completed tasks
                         tasks.RemoveAll(x => x.IsCompleted);
                     }
                     while (!stopWorkEvent.WaitOne(TimeSpan.FromSeconds(7)));
+                    //wait for all processing tasks before service stop
                     logger.Info("Waiting for processing documents");
                     Task.WaitAll(tasks.ToArray(), TimeSpan.FromMinutes(1).Milliseconds);
                     logger.Info("All documents were processed");
@@ -85,21 +118,13 @@ namespace DocumentProcessor.ProcessorService
             }
         }
 
-        protected override void OnStart(string[] args)
-        {
-            logger.Info("=====Starting service...");
-            stopWorkEvent.Reset();
-            workThread.Start();
-        }
-
-        protected override void OnStop()
-        {
-            logger.Info("Stopping service...");
-            stopWorkEvent.Set();
-            workThread.Join();
-            logger.Info("=====Finish");
-        }
-
+        /// <summary>
+        /// Processes message
+        /// logBuilder for output whole log as one
+        /// If message processed successfully, delete files
+        /// If message failed, moves files from invalid chain to Failed folder
+        /// </summary>
+        /// <param name="message"></param>
         private void ProcessMessage(QueueMessage message)
         {
             var logBuilder = new StringBuilder();

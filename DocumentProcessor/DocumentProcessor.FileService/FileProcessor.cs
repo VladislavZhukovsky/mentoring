@@ -48,6 +48,12 @@ namespace DocumentProcessor.FileService
             sourceDirectoryChangedEvent.Set();
         }
 
+        /// <summary>
+        /// On service start:
+        /// starts fileWatcher to monitor working folder
+        /// starts workingThread
+        /// </summary>
+        /// <param name="args"></param>
         protected override void OnStart(string[] args)
         {
             logger.Info("Starting service...");
@@ -58,6 +64,7 @@ namespace DocumentProcessor.FileService
             workThread.Start();
         }
 
+
         protected override void OnStop()
         {
             logger.Info("=====Stopping service...");
@@ -66,6 +73,14 @@ namespace DocumentProcessor.FileService
             workThread.Join();
         }
 
+        /// <summary>
+        /// Scans source folder every 10 seconds
+        /// Moving only when at least three files are in the folder
+        /// Send message with file chain
+        /// If file is not accessible, leaves it
+        /// If stopWorkEvent is set, finishes work
+        /// </summary>
+        /// <param name="obj"></param>
         protected void WorkProcedure(object obj)
         {
             var movedFiles = new List<string>();

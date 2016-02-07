@@ -37,8 +37,10 @@ namespace DocumentProcessor.Core.Processors
                     logBuilder.AppendLine(String.Format("===Filename: {0}", item));
                 }
                 this.workingFolder = workingFolder;
+                //using for IDisposable PdfDocument object
                 using (var doc = CreatePdf(files))
                 {
+                    //multi-threading sync for getting next document name
                     lock (locker)
                     {
                         var nextPdfName = namingManager.GetNextDocumentName(documentFolder, PDF_EXTENSION);
@@ -82,10 +84,12 @@ namespace DocumentProcessor.Core.Processors
             XImage xImage;
             try
             {
+                //using for IDisposable XImage object (blocks files while deleting after processing)
                 using (xImage = XImage.FromFile(imagePath))
                 {
                     int imagePdfWidth;
                     int imagePdfHeight;
+                    //change image size to place it on pdf page
                     GetPdfImageSize(page, xImage, out imagePdfWidth, out imagePdfHeight);
                     gfx.DrawImage(xImage, xPosition, yPosition, imagePdfWidth, imagePdfHeight);
                 }

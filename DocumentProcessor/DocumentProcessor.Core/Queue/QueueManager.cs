@@ -54,6 +54,9 @@ namespace DocumentProcessor.Core.Queue
             queue.Formatter = new XmlMessageFormatter(new Type[] { typeof(QueueMessage) });
         }
 
+        /// <summary>
+        /// Finishes work with the queue
+        /// </summary>
         public void Dispose()
         {
             if (queue != null)
