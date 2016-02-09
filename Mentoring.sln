@@ -84,6 +84,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocumentProcessor.Core", "D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocumentProcessor.Test", "DocumentProcessor\DocumentProcessor.Test\DocumentProcessor.Test.csproj", "{FDB51FE9-D65A-4AD3-B461-5230093E1042}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "09 - CustomSerialization", "09 - CustomSerialization", "{DE512D9E-9DED-4C3B-81A4-8364A26A7EBE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomSerizlization", "09 - CustomSerialization\CustomSerizlization\CustomSerizlization.csproj", "{DDB98F55-94AA-42B5-BD52-6B0DF5B2F0DC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -202,6 +206,10 @@ Global
 		{FDB51FE9-D65A-4AD3-B461-5230093E1042}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FDB51FE9-D65A-4AD3-B461-5230093E1042}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FDB51FE9-D65A-4AD3-B461-5230093E1042}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DDB98F55-94AA-42B5-BD52-6B0DF5B2F0DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDB98F55-94AA-42B5-BD52-6B0DF5B2F0DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDB98F55-94AA-42B5-BD52-6B0DF5B2F0DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDB98F55-94AA-42B5-BD52-6B0DF5B2F0DC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -236,5 +244,6 @@ Global
 		{2EEF1F71-96CF-451B-BC74-B72C30E0925F} = {1209AA4C-794D-42C8-B464-9426E10B1396}
 		{A0A17443-9AAA-4FF3-A8A0-2A0D5E0271AC} = {1209AA4C-794D-42C8-B464-9426E10B1396}
 		{FDB51FE9-D65A-4AD3-B461-5230093E1042} = {1209AA4C-794D-42C8-B464-9426E10B1396}
+		{DDB98F55-94AA-42B5-BD52-6B0DF5B2F0DC} = {DE512D9E-9DED-4C3B-81A4-8364A26A7EBE}
 	EndGlobalSection
 EndGlobal
