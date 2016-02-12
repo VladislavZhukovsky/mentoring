@@ -4,7 +4,10 @@ namespace Task.DB
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Spatial;
+    using System.Runtime.Serialization;
 
     public partial class Category
     {
@@ -28,5 +31,29 @@ namespace Task.DB
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Product> Products { get; set; }
+
+        //serialization events implementation
+
+        [OnSerializing]
+        public void OnSerializing(StreamingContext context)
+        {
+            LoadProducts((DbContext)context.Context);
+        }
+
+        [OnSerialized]
+        public void OnSerialized(StreamingContext context)
+        {
+            Products.Clear();
+        }
+
+        /// <summary>
+        /// Loads collection
+        /// </summary>
+        /// <param name="dbContext"></param>
+        private void LoadProducts(DbContext dbContext)
+        {
+            var oc = (dbContext as IObjectContextAdapter).ObjectContext;
+            oc.LoadProperty(this, x => x.Products);
+        }
     }
 }

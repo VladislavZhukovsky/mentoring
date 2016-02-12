@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
@@ -17,8 +19,8 @@ namespace Task
         static void Main(string[] args)
         {
             Initialize();
-
-            
+            SerializationCallbacks();
+            Console.ReadKey();
         }
 
         public static void Initialize()
@@ -30,17 +32,16 @@ namespace Task
         {
             dbContext.Configuration.ProxyCreationEnabled = false;
 
-            var tester = new XmlDataContractSerializerTester<IEnumerable<Category>>(new NetDataContractSerializer(), true);
+            //adding DbContext to StreamingContext
+            var tester = new XmlDataContractSerializerTester<IEnumerable<Category>>(new NetDataContractSerializer(new StreamingContext(StreamingContextStates.All, dbContext)), true);
             var categories = dbContext.Categories.ToList();
-
-            var c = categories.First();
 
             tester.SerializeAndDeserialize(categories);
         }
 
         public static void ISerializable()
         {
-            dbContext.Configuration.ProxyCreationEnabled = false;
+            dbContext.Configuration.ProxyCreationEnabled = true;
 
             var tester = new XmlDataContractSerializerTester<IEnumerable<Product>>(new NetDataContractSerializer(), true);
             var products = dbContext.Products.ToList();
@@ -69,5 +70,20 @@ namespace Task
 
             tester.SerializeAndDeserialize(orders);
         }
+
+        //public static T UnProxy<T>(DbContext context, T proxyObject) where T : class
+        //{
+        //    var proxyCreationEnabled = context.Configuration.ProxyCreationEnabled;
+        //    try
+        //    {
+        //        context.Configuration.ProxyCreationEnabled = false;
+        //        T poco = context.Entry(proxyObject).CurrentValues.ToObject() as T;
+        //        return poco;
+        //    }
+        //    finally
+        //    {
+        //        context.Configuration.ProxyCreationEnabled = proxyCreationEnabled;
+        //    }
+        //}
     }
 }

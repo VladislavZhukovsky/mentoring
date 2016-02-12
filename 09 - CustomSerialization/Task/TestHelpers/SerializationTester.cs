@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -20,6 +21,10 @@ namespace Task.TestHelpers
 
 		public TData SerializeAndDeserialize(TData data)
 		{
+            //var fs = new FileStream("file.xml", FileMode.OpenOrCreate);
+            //(serializer as NetDataContractSerializer).WriteObject(fs, data);
+            //fs.Close();
+
 			var stream = new MemoryStream();
 
 			Console.WriteLine("Start serialization");
