@@ -52,8 +52,15 @@ namespace Task.DB
         /// <param name="dbContext"></param>
         private void LoadProducts(DbContext dbContext)
         {
-            var oc = (dbContext as IObjectContextAdapter).ObjectContext;
-            oc.LoadProperty(this, x => x.Products);
+            if (dbContext != null)
+            {
+                var oc = (dbContext as IObjectContextAdapter).ObjectContext;
+                try
+                {
+                    oc.LoadProperty(this, x => x.Products);
+                }
+                catch (InvalidOperationException) { }
+            }
         }
     }
 }

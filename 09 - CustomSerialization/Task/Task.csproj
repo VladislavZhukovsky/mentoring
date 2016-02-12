@@ -57,6 +57,7 @@
     <Compile Include="DB\Category.cs" />
     <Compile Include="DB\Customer.cs" />
     <Compile Include="DB\CustomerDemographic.cs" />
+    <Compile Include="DB\DBHelper.cs" />
     <Compile Include="DB\Employee.cs" />
     <Compile Include="DB\Northwind.cs" />
     <Compile Include="DB\Order.cs" />
