@@ -13,7 +13,7 @@ using Task.DB;
 namespace CustomSerialization.Task.SerializationSurrogates
 {
     //Surrogated class with IDataContractSurrogate implemention for customizing serialization
-    public class Order_DetailListSurrogated : IDataContractSurrogate
+    public class Order_DetailsSurrogated : IDataContractSurrogate
     {
         //DbContext added to use it for loading referenced properties
         public Northwind DbContext { get; set; }
@@ -24,7 +24,7 @@ namespace CustomSerialization.Task.SerializationSurrogates
         {
             if (typeof(Order_Detail).IsAssignableFrom(type))
             {
-                return typeof(Order_DetailListSurrogated);
+                return typeof(Order_DetailsSurrogated);
             }
             //DataCOntractProduct is made for serialization of Order_Details hash set
             if (typeof(Product).IsAssignableFrom(type))

@@ -21,7 +21,7 @@ namespace Task
         static void Main(string[] args)
         {
             Initialize();
-            ISerializable();
+            IDataContractSurrogate();
             Console.ReadKey();
         }
 
@@ -51,13 +51,14 @@ namespace Task
             tester.SerializeAndDeserialize(products);
         }
 
-
         public static void ISerializationSurrogate()
         {
             dbContext.Configuration.ProxyCreationEnabled = false;
 
             //using surrogates
-            var orderDetailsSurrogated = new Order_DetailListSurrogated() { DbContext = dbContext };
+            //DataContractSurrogate used instead of SerializationSurrogate because 
+            //it is not compatible with DataCOntractSerializer
+            var orderDetailsSurrogated = new Order_DetailsSurrogated() { DbContext = dbContext };
 
             var serializer = new DataContractSerializer(
                     typeof(Product),
