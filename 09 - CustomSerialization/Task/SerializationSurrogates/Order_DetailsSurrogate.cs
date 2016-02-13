@@ -26,7 +26,7 @@ namespace CustomSerialization.Task.SerializationSurrogates
             {
                 return typeof(Order_DetailsSurrogated);
             }
-            //DataCOntractProduct is made for serialization of Order_Details hash set
+            //DataContractProduct is made for serialization of Order_Details hash set
             if (typeof(Product).IsAssignableFrom(type))
             {
                 return typeof(DataContractProduct);

@@ -69,6 +69,7 @@
     <Compile Include="DB\Territory.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SerializationSurrogates\OrdersSurrogate.cs" />
     <Compile Include="SerializationSurrogates\Order_DetailsSurrogate.cs" />
     <Compile Include="SerializationSurrogates\DataContractProduct.cs" />
     <Compile Include="TestHelpers\SerializationTester.cs" />

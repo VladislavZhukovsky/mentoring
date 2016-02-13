@@ -58,7 +58,7 @@ namespace Task
             //using surrogates
             //DataContractSurrogate used instead of SerializationSurrogate because 
             //it is not compatible with DataCOntractSerializer
-            var orderDetailsSurrogated = new Order_DetailsSurrogated() { DbContext = dbContext };
+            var orderDetailsSurrogate = new Order_DetailsSurrogated() { DbContext = dbContext };
 
             var serializer = new DataContractSerializer(
                     typeof(Product),
@@ -66,7 +66,7 @@ namespace Task
                     int.MaxValue,
                     false,
                     true,
-                    orderDetailsSurrogated
+                    orderDetailsSurrogate
                     );
 
             var tester = new XmlDataContractSerializerTester<IEnumerable<Order_Detail>>(serializer);
@@ -80,12 +80,21 @@ namespace Task
             dbContext.Configuration.ProxyCreationEnabled = true;
             dbContext.Configuration.LazyLoadingEnabled = true;
 
-            var tester = new XmlDataContractSerializerTester<IEnumerable<Order>>(new DataContractSerializer(typeof(IEnumerable<Order>)), true);
-            var orders = dbContext.Orders.ToList();
+            //using surrogate
+            var ordersSurrogate = new OrdersSurrogate() { DbContext = dbContext };
+            var serializer = new DataContractSerializer(
+                typeof(IEnumerable<Order>),
+                new Type[] { },
+                int.MaxValue,
+                false,
+                true,
+                ordersSurrogate
+                );
 
+            var tester = new XmlDataContractSerializerTester<IEnumerable<Order>>(serializer, true);
+            var orders = dbContext.Orders.ToList();
             tester.SerializeAndDeserialize(orders);
         }
 
-        
     }
 }
