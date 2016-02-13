@@ -72,9 +72,25 @@ namespace Task.DB
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             var dbContext = context.Context as Northwind;
-            (dbContext as IObjectContextAdapter).ObjectContext.LoadProperty(this, x => x.Category);
-            (dbContext as IObjectContextAdapter).ObjectContext.LoadProperty(this, x => x.Supplier);
-            (dbContext as IObjectContextAdapter).ObjectContext.LoadProperty(this, x => x.Order_Details);
+            if (dbContext != null)
+            {
+                (dbContext as IObjectContextAdapter).ObjectContext.LoadProperty(this, x => x.Category);
+                (dbContext as IObjectContextAdapter).ObjectContext.LoadProperty(this, x => x.Supplier);
+                (dbContext as IObjectContextAdapter).ObjectContext.LoadProperty(this, x => x.Order_Details);
+
+                //unproxying objects to serialize real ones
+                info.AddValue("Category", DBHelper.UnProxy<Category>(dbContext, Category));
+                info.AddValue("Supplier", DBHelper.UnProxy<Supplier>(dbContext, Supplier));
+
+                var orderDetails = Order_Details.Select(x => DBHelper.UnProxy<Order_Detail>(dbContext, x)).ToList();
+                info.AddValue("OrderDetails", orderDetails);
+            }
+            else
+            {
+                info.AddValue("Category", Category);
+                info.AddValue("Supplier", Supplier);
+                info.AddValue("OrderDetails", Order_Details);
+            }
 
             info.AddValue("ProductID", ProductID);
             info.AddValue("ProductName", ProductName);
@@ -87,12 +103,7 @@ namespace Task.DB
             info.AddValue("ReorderLevel", ReorderLevel);
             info.AddValue("Discontinued", Discontinued);
 
-            //unproxying objects to serialize real ones
-            info.AddValue("Category", DBHelper.UnProxy<Category>(dbContext, Category));
-            info.AddValue("Supplier", DBHelper.UnProxy<Supplier>(dbContext, Supplier));
 
-            var orderDetails = Order_Details.Select(x => DBHelper.UnProxy<Order_Detail>(dbContext, x)).ToList();
-            info.AddValue("OrderDetails", orderDetails);
         }
     }
 }

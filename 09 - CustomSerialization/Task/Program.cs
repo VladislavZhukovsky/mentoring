@@ -1,4 +1,5 @@
 ﻿using CustomSerialization.Task.DB;
+using CustomSerialization.Task.SerializationSurrogates;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
@@ -55,7 +56,19 @@ namespace Task
         {
             dbContext.Configuration.ProxyCreationEnabled = false;
 
-            var tester = new XmlDataContractSerializerTester<IEnumerable<Order_Detail>>(new DataContractSerializer(typeof(Product)), true);
+            //using surrogates
+            var orderDetailsSurrogated = new Order_DetailListSurrogated() { DbContext = dbContext };
+
+            var serializer = new DataContractSerializer(
+                    typeof(Product),
+                    new Type[] { typeof(List<Order_Detail>), typeof(Order_Detail) },
+                    int.MaxValue,
+                    false,
+                    true,
+                    orderDetailsSurrogated
+                    );
+
+            var tester = new XmlDataContractSerializerTester<IEnumerable<Order_Detail>>(serializer);
             var orderDetails = dbContext.Order_Details.ToList();
 
             tester.SerializeAndDeserialize(orderDetails);
