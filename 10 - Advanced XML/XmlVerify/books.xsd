@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<xs:schema targetNamespace="http://tempuri.org/XMLSchema.xsd"
+<xs:schema targetNamespace="http://library.by/catalog"
     elementFormDefault="qualified"
     xmlns="http://tempuri.org/XMLSchema.xsd"
-    xmlns:mstns="http://tempuri.org/XMLSchema.xsd"
+    xmlns:b="http://library.by/catalog"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
 >
   <xs:element name="catalog">
@@ -41,14 +41,18 @@
               <xs:element name="publish_date" type="xs:date">
               </xs:element>
               <xs:element name="description" type="xs:string">
-                
               </xs:element>
               <xs:element name="registration_date" type="xs:date">
               </xs:element>
             </xs:sequence>
+            <xs:attribute name="id" type="xs:string" use="required"/>
           </xs:complexType>
         </xs:element>
       </xs:sequence>
     </xs:complexType>
+    <xs:unique name="uniqueId">
+      <xs:selector xpath="b:book"></xs:selector>
+      <xs:field xpath="@id"></xs:field>
+    </xs:unique>
   </xs:element>
 </xs:schema>
