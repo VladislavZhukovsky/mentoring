@@ -17,64 +17,75 @@
     <xsl:template match="/b:catalog">
       <html>
         <body>
-          <table>
-
-            <xsl:call-template name="tableHead1">
-              <xsl:with-param name="genreName">Computer</xsl:with-param>
-            </xsl:call-template>
-
-            <xsl:call-template name="tableHead2"/>
-
-            <xsl:call-template name="tableBody">
-              <xsl:with-param name="genreName">Computer</xsl:with-param>
-            </xsl:call-template>
-
-            <!--<xsl:call-template name="table">
-              <xsl:with-param name="genreName">Computer</xsl:with-param>
-            </xsl:call-template>-->
-            
-          </table>
+          <h1>Books report by genres <xsl:value-of select="b:DateTimeNow()"/></h1>
+          <xsl:call-template name="table">
+            <xsl:with-param name="genreName">Computer</xsl:with-param>
+          </xsl:call-template>
+          <xsl:call-template name="table">
+            <xsl:with-param name="genreName">Fantasy</xsl:with-param>
+          </xsl:call-template>
+          <xsl:call-template name="table">
+            <xsl:with-param name="genreName">Romance</xsl:with-param>
+          </xsl:call-template>
+          <xsl:call-template name="table">
+            <xsl:with-param name="genreName">Horror</xsl:with-param>
+          </xsl:call-template>
+          <xsl:call-template name="table">
+            <xsl:with-param name="genreName">Science Fiction</xsl:with-param>
+          </xsl:call-template>
+          <xsl:call-template name="tableSummaryCatalog"></xsl:call-template>
         </body>
       </html>
     </xsl:template>
 
 
   <xsl:template name="table">
-    <xsl:param name="genreName"></xsl:param>
+    <xsl:param name="genreName"/>
     
-    <xsl:call-template name="tableHead1">
+    <table>
+
+      <xsl:call-template name="tableHeader">
+        <xsl:with-param name="genreName">
+          <xsl:value-of select="$genreName"/>
+        </xsl:with-param>
+      </xsl:call-template>
+
+      <xsl:call-template name="tableBody">
+        <xsl:with-param name="genreName">
+          <xsl:value-of select="$genreName"/>
+        </xsl:with-param>
+      </xsl:call-template>
+
+      <xsl:call-template name="tableSummary">
+        <xsl:with-param name="genreName">
+          <xsl:value-of select="$genreName"/>
+        </xsl:with-param>
+      </xsl:call-template>
+    </table>
+  </xsl:template>
+
+  <xsl:template name="tableHeader">
+    <xsl:param name="genreName"/>
+    
+    <xsl:call-template name="tableHeader1">
       <xsl:with-param name="genreName">
         <xsl:value-of select="$genreName"/>
       </xsl:with-param>
     </xsl:call-template>
-    
-    <xsl:call-template name="tableHead2"/>
-    
-    <xsl:call-template name="tableBody">
-      <xsl:with-param name="genreName">$genreName</xsl:with-param>
-    </xsl:call-template>
+    <xsl:call-template name="tableHeader2"/>
     
   </xsl:template>
 
-  <xsl:template name="tableHead1">
+  <xsl:template name="tableHeader1">
     <xsl:param name="genreName"/>
     <tr>
-      <td align="right">
-        <xsl:text>Genre: </xsl:text>
-      </td>
       <td>
         <xsl:value-of select="$genreName"></xsl:value-of>
-      </td>
-      <td align="right">
-        <xsl:text>Date: </xsl:text>
-      </td>
-      <td>
-        <xsl:value-of select="b:DateTimeNow()"/>
       </td>
     </tr>
   </xsl:template>
 
-  <xsl:template name="tableHead2">
+  <xsl:template name="tableHeader2">
     <tr>
       <td align="center">Author</td>
       <td align="center">Title</td>
@@ -84,7 +95,7 @@
   </xsl:template>
 
   <xsl:template name="tableBody">
-    <xsl:param name="genreName"></xsl:param>
+    <xsl:param name="genreName"/>
     <xsl:for-each select="b:book[b:genre=$genreName]">
       <tr>
         <td>
@@ -103,4 +114,20 @@
     </xsl:for-each>
   </xsl:template>
 
+  <xsl:template name="tableSummary">
+    <xsl:param name="genreName"/>
+    <tr>
+      <td>Count: <xsl:value-of select="count(//b:book[b:genre=$genreName])"/></td>
+    </tr>
+  </xsl:template>
+
+  <xsl:template name="tableSummaryCatalog">
+    <table>
+      <tr>
+        <td>All count: <xsl:value-of select="count(//b:book)"/>
+      </td>
+      </tr>
+    </table>
+  </xsl:template>
+  
 </xsl:stylesheet>
