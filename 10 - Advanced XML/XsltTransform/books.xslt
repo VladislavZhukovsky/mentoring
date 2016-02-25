@@ -5,18 +5,33 @@
 >
     <xsl:output method="html" indent="yes"/>
 
+    <msxsl:script language="CSharp" implements-prefix="b">
+       <![CDATA[
+       public string DateTimeNow()
+       {
+          return System.DateTime.UtcNow.ToString();
+       }
+       ]]>
+    </msxsl:script>
+    
     <xsl:template match="/b:catalog">
       <html>
         <body>
           <table>
-            <xsl:apply-templates/>
+            <tr>
+              <td>
+                <xsl:value-of select="b:DateTimeNow()"/>
+              </td>
+            </tr>
+            <tr>
+              <td>Author</td>
+              <td>Title</td>
+              <td>Publish date</td>
+              <td>Registration date</td>
+            </tr>
           </table>
         </body>
       </html>
     </xsl:template>
-
-  <xsl:template match="b:book/b:author">
-    
-  </xsl:template>
   
 </xsl:stylesheet>
