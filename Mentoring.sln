@@ -96,6 +96,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XmlVerify", "10 - Advanced 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XsltTransform", "10 - Advanced XML\XsltTransform\XsltTransform.csproj", "{E9EB90D6-AB1B-4E13-8A64-5519180C81FC}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "11 - Debugging", "11 - Debugging", "{666E7566-A5E8-4A32-8AA3-A56B13BD8C9F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrackMeDump", "11 - Debugging\CrackMeDump\CrackMeDump.csproj", "{5B66F49D-257A-472C-85ED-36168D69F23B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -230,6 +234,10 @@ Global
 		{E9EB90D6-AB1B-4E13-8A64-5519180C81FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E9EB90D6-AB1B-4E13-8A64-5519180C81FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E9EB90D6-AB1B-4E13-8A64-5519180C81FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B66F49D-257A-472C-85ED-36168D69F23B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B66F49D-257A-472C-85ED-36168D69F23B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B66F49D-257A-472C-85ED-36168D69F23B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B66F49D-257A-472C-85ED-36168D69F23B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -268,5 +276,6 @@ Global
 		{C9CD40F0-D738-49CC-A27E-6341D364F6F0} = {DE512D9E-9DED-4C3B-81A4-8364A26A7EBE}
 		{5562EA99-F43B-4C1F-8CF3-F1FC21614736} = {2B1F507A-0CDF-4A8A-973D-6E303B6EE9E7}
 		{E9EB90D6-AB1B-4E13-8A64-5519180C81FC} = {2B1F507A-0CDF-4A8A-973D-6E303B6EE9E7}
+		{5B66F49D-257A-472C-85ED-36168D69F23B} = {666E7566-A5E8-4A32-8AA3-A56B13BD8C9F}
 	EndGlobalSection
 EndGlobal
