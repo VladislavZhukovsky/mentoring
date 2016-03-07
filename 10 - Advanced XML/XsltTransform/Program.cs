@@ -14,7 +14,7 @@ namespace XsltTransform
             var xsl = new XslCompiledTransform(true);
             var settings = new XsltSettings { EnableScript = true };
             xsl.Load("books.xslt", settings, null);
-            xsl.Transform("books.xml", "result.html");
+            xsl.Transform("books.xml", "report.html");
 
         }
     }
